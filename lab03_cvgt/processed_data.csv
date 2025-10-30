@@ -1,0 +1,14 @@
+Entry #,File Path,Temperature (°C),Average Pressure (kPa),σ Pressure (kPa)
+0,heating_measurement/pressure_1.8_Celsius.csv,1.8,-6.54,0.0
+1,heating_measurement/pressure_18.0_Celsius.csv,18.0,-0.97,0.01
+2,heating_measurement/initial_pressure.csv,22.5,0.31,0.0
+3,heating_measurement/pressure_28.0_Celsius.csv,28.0,2.29,0.01
+4,heating_measurement/pressure_37.3_Celsius.csv,37.3,5.15,0.0
+5,cooling_measurement/pressure_45.2_Celsius.csv,45.2,7.55,0.0
+6,heating_measurement/pressure_49.9_Celsius.csv,49.9,9.1,0.01
+7,cooling_measurement/pressure_51.0_Celsius.csv,51.0,9.34,0.01
+8,heating_measurement/pressure_60.0_Celsius.csv,60.0,12.78,0.01
+9,cooling_measurement/pressure_60.0_Celsius.csv,60.0,12.17,0.01
+10,cooling_measurement/pressure_70.6_Celsius.csv,70.6,15.34,0.01
+11,heating_measurement/pressure_70.8_Celsius.csv,70.8,15.66,0.01
+12,heating_measurement/pressure_79.1_Celsius.csv,79.1,18.82,0.01

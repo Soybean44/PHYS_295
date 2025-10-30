@@ -1,0 +1,51 @@
+---
+title: Dartboard Statistics
+jupyter: python3
+---
+
+Start with our imports
+
+```{python}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy
+```
+
+First we grab our data
+
+```{python}
+dartboard_data = pd.read_csv("Shahid_Sovereign_dartboard.csv")
+dart_strikes = dartboard_data["Dart Strike"].to_numpy()
+dartboard_data.head()
+```
+Plot the histogram
+
+```{python}
+plt.figure()
+plt.hist(dart_strikes, bins=41, range=(-20,20))
+plt.show()
+```
+
+This should be the most acurate histogram of the data and is plotted between -20 20 which is good. We can also do some stats on the data
+
+```{python}
+mean = np.mean(dart_strikes)
+std = np.std(dart_strikes)
+print(f"mean: {mean}, std: {std}")
+```
+
+We can then plot a normal curve over the histogram to get 
+
+```{python}
+x = np.arange(-20, 20)
+y = scipy.stats.norm.pdf(x, mean, std) * 150 
+plt.figure()
+plt.hist(dart_strikes, bins=41, range=(-20,20), label="Experimental Data")
+plt.plot(x,y, label="Calculated Distribution")
+plt.legend()
+plt.title("Normal Distribution of Dart Strikes")
+plt.xlabel("Bin Number")
+plt.ylabel("Frequency")
+plt.show()
+```

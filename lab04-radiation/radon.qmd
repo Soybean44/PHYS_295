@@ -1,0 +1,170 @@
+---
+title: Lab 4a Radon
+jupyter: python3
+---
+
+Import libraries 
+
+```{python}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
+```
+
+Read the data
+
+```{python}
+data = pd.read_csv("data.csv")
+```
+
+add time to each datapoint
+
+```{python}
+timestamps = np.array([np.append(data.iloc[i][5], data.iloc[i].to_numpy()[1:5] + data.iloc[i].to_numpy()[5]) for i in range(5)])
+timestamps
+```
+
+calculate dN/dt
+
+```{python}
+dt = list(timestamps[:, 1:] - timestamps[:, :-1])
+dNdt = np.array([[1/dt[i][j] for j in range (4)] for i in range(5)])
+dNdt
+```
+
+plot dN/dt per trial
+
+$$
+\frac{d N}{d t} = k N = kN_0 e^{k t} \implies \ln(\frac{d N}{d t}) = \ln(kN_0 e^{k t}) = \ln(kN_0) + k t
+$$
+
+```{python}
+plt.figure()
+plt.title("Time Derivative of Charge Over Time")
+plt.xlabel("Time (s)") 
+plt.ylabel("dQ/dt (q/s)") 
+for i in range(len(dNdt)):
+  plt.scatter(timestamps[i][:-1], dNdt[i])
+plt.show()
+```
+
+We realised here that we did the experiment wrong and needed to measure the change in charge on one line specifically. So now we have 4 linear datasets (spread out over 4 trials) to plot and fit. We took some more data after the fact to get enough but it ended up skewing our results a lot probably due to the long wait time and minimal radon, so we will ommit it
+```{python}
+dNdt = dNdt[:-1].T
+timestamps = timestamps.T
+```
+
+Now we can plot and fit the data
+
+```{python}
+fits = []
+cmap = plt.get_cmap("Set1")
+plt.figure()
+plt.title("Time Derivative of Charge Over Time")
+plt.xlabel("Time (s)") 
+plt.ylabel("dQ/dt (q/s)") 
+for i in range(len(dNdt)):
+  X = timestamps[i][:-1]
+  Y = dNdt[i]
+  w, e = np.polyfit(X, np.log(Y), 1, cov=True)
+  e = np.sqrt(np.diag(e))
+  fits.append((
+    (w[0],e[0]),
+    (w[1],e[1])
+    )) 
+  plt.scatter(X,Y, color=cmap(i), label=f"Line {3-i}")
+  X = np.arange(0, 750, 10)
+  plt.plot(X, np.exp(w[0]*X + w[1]), color=cmap(i), label=f"Fit {3-i}")
+plt.legend()
+plt.show()
+```
+
+We can see the fits are roughly exponential, and this is the best we can get
+
+```{python}
+for i, fit in enumerate(fits):
+  m = fit[0]
+  b = fit[1]
+  print(f"{i}:")
+  print(f"  m: {m[0]:.4f}+-{m[1]:.4f}")
+  print(f"  b: {b[0]:.4f}+-{b[1]:.4f}")
+```
+
+After exponentiation our linear fit transforms from 
+
+$$
+\ln(y) = mx + b \rightarrow y = e^{mx+b} = e^b \cdot e^{mx} = y_{0} \cdot e^{kx}
+$$
+
+only $y_0$ needs to be recalculated, whereas $m$ can stay the same
+
+Therefore we get
+
+```{python}
+for i, fit in enumerate(fits):
+  k = fit[0]
+  y0 = np.exp(fit[1])
+  print(f"{i}:")
+  print(f"  k: {k[0]:.4f}+-{k[1]:.4f}")
+  print(f"  y_0: {y0[0]:.4f}+-{y0[1]:.4f}")
+```
+
+$$
+x_\text{combined} = \frac{\Sigma x_i/\sigma_i}{\Sigma 1/\sigma_i},
+\sigma_\text{combined} = \frac{1}{\Sigma 1/\sigma_i} 
+$$
+
+
+```{python}
+fits = np.array(fits)
+slopes = fits[:, 0]
+ints = fits[:, 1]
+m_tot = [0, (1/slopes[:, 1]).sum()]
+m_tot[0] = (slopes[:, 0]/slopes[:, 1]).sum()/m_tot[1]
+print(f"m: {m_tot[0]:.4f}+-{m_tot[1]:.4f}")
+b_tot = [0, (1/ints[:, 1]).sum()]
+b_tot[0] = (ints[:, 0]/ints[:, 1]).sum()/m_tot[1]
+print(f"b: {b_tot[0]:.4f}+-{b_tot[1]:.4f}")
+```
+
+to get the exponentiated values, we need not do anything to the slope but instead exponentiate the intercept to get
+
+$$
+y_0 = e^b
+$$
+
+and the error is then
+$$
+\sigma_{y_0} = \sigma_b \cdot \frac{\partial y_0}{\partial b} = \sigma_b \cdot e^b = \sigma_b \cdot y_0
+$$
+
+```{python}
+y0_tot = [np.exp(b_tot[0]), b_tot[1]]
+y0_tot[1] = y0_tot[1]*y0_tot[0]
+print(f"k_exp: {-np.log(2)/55}")
+print(f"k: {m_tot[0]:.4f}+-{m_tot[1]:.4f}")
+print(f"b_exp: {1}")
+print(f"b: {y0_tot[0]:.4f}+-{y0_tot[1]:.4f}")
+```
+
+due to the small number of trials and large error from using multiple ticks in the experiment incorrectly we have an insane ammount of error but regarless our values do agree with the theoretical values. Then we get that our half life is approximately
+
+```{python}
+half_life = -np.log(2)/m_tot[0]
+half_life_err = -half_life * m_tot[1]/m_tot[0]
+print(f"half life: {half_life:.4f}+-{half_life_err:.4e}")
+print(f"%err: {half_life_err*100/half_life}")
+```
+
+Individual fit half lives
+
+```{python}
+for i, fit in enumerate(fits):
+  k = fit[0]
+  half_life = -np.log(2)/k[0]
+  half_life_err = -half_life * k[1]/k[0]
+  print(f"{i}:")
+  print(f"  k: {k[0]:.4f}+-{k[1]:.4f}")
+  print(f"  half life: {half_life:.4f}+-{half_life_err:.4f}")
+```

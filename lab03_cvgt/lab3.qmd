@@ -1,0 +1,123 @@
+---
+title: Constant Volume Gas Thermometer
+jupyter: python3
+---
+
+imports 
+
+```{python}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
+import scipy.stats as stats
+import os
+```
+
+read all csv files, average all pressure points and save it in a new dataframe
+
+```{python}
+records = []
+def read_dir(directory_path, records):
+  for filename in os.listdir(directory_path):
+    if filename.lower().endswith(".csv"):
+      file_path = os.path.join(directory_path, filename)
+      df = pd.read_csv(file_path)
+      avg_pressure = df["Pressure(kPa)"].mean()
+      std_pressure = df["Pressure(kPa)"].std()
+      # we recorded initial temperature in our book instead of in the filename 
+      temperature = (22.5 if filename == "initial_pressure.csv" 
+        else float(filename.split("_")[1]))
+      records.append({"file_path": file_path, "temperature": temperature, "avg_pressure": avg_pressure, "std_pressure": std_pressure})
+
+read_dir("heating_measurement/", records)
+read_dir("cooling_measurement/", records)
+data = pd.DataFrame(records).sort_values(by="temperature", ascending=True).reset_index(drop=True)
+data
+```
+
+Since all our readings were relative to initial pressure scale by initial pressure 
+
+```{python}
+data["avg_pressure"] -= float(data[data["file_path"] == "heating_measurement/initial_pressure.csv"]["avg_pressure"].to_numpy()[0])
+data["avg_pressure"].head()
+# add the uncertainties
+data["std_pressure"] += float(data[data["file_path"] == "heating_measurement/initial_pressure.csv"]["std_pressure"].to_numpy()[0])
+```
+plot temperature and absolute pressure which is 
+
+$$
+P_{rel} + P_{atm} = \left(\frac{nR}{V}\right)T + \left(\frac{nR}{V} T_0\right)
+$$
+
+where $T_0$ is absolute 0 in celsius. First we convert our pressure to absolute pressure like so
+
+```{python}
+p_atm_cm_Hg = 70.22 
+delta_atm_cm_Hg = 0.01
+p_atm = p_atm_cm_Hg*1.333223684
+delta_atm = delta_atm_cm_Hg * 1.333223684
+absolute_pressure = data["avg_pressure"].to_numpy() + p_atm
+# add the uncertainties
+std_absolute_pressure = data["std_pressure"].to_numpy() + delta_atm
+print(f"atm: {p_atm} +- {delta_atm}")
+absolute_pressure
+```
+
+fit the data
+
+```{python}
+popt, pcov = curve_fit(lambda x, m, b: m*x + b, 
+data["temperature"].to_numpy(),
+absolute_pressure,
+sigma=std_absolute_pressure)
+perr=np.sqrt(np.diag(pcov))
+popt[1]/popt[0]
+```
+
+plot the graph 
+
+```{python}
+X = np.arange(0,80,1)
+plt.figure()
+plt.title("Absolute Pressure vs Temperature")
+plt.ylabel("Absolute Pressure (kPa)")
+plt.xlabel("Temperature $\degree$C")
+
+plt.errorbar(data["temperature"], 
+  absolute_pressure, 
+  yerr=std_absolute_pressure, 
+  color="b", 
+  fmt="o",
+  label="Experimental Data (w/ error)")
+
+plt.plot(X, popt[0]*X + popt[1], label="Fit")
+
+plt.axhline(p_atm, color="r", linestyle="--", label="Atmospheric Pressure (y)")
+plt.axvline(22.5, color="r", linestyle="--", label="Room Temperature (x)")
+plt.legend()
+plt.show()
+```
+
+the value for slope and intercept is 
+
+```{python}
+print(f"slope: {popt[0]} $\pm$ {perr[0]}")
+print(f"intercept: {popt[1]} $\pm$ {perr[1]}")
+```
+
+$T_0$ is just intercept divided by negative slope
+
+```{python}
+T_0 = popt[1]/popt[0]
+delta_T_0 = np.sqrt( (perr[1]/popt[0])**2 + ((popt[1]*perr[0])/(popt[0]**2))**2 ) 
+print(f"T_0 = {T_0} +- {delta_T_0}")
+```
+
+It's agreement score
+
+```{python}
+t_0 = (273.15 - T_0)/delta_T_0
+t_0
+stats.norm().cdf(t_0) - stats.norm().cdf(-t_0)
+```

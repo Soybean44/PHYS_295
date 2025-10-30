@@ -1,0 +1,1 @@
+../lab_report_template/PHYS_295_template.typ
