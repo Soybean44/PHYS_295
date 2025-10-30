@@ -128,27 +128,27 @@ window.Quarto = {
 
 
 <p>Import libraries</p>
-<div id="9acaf922" class="cell" data-execution_count="1">
+<div id="746da42b" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> curve_fit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Read the data</p>
-<div id="36a696f8" class="cell" data-execution_count="2">
+<div id="7a295d7e" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="st">"data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>add time to each datapoint</p>
-<div id="dbf4922e" class="cell" data-execution_count="3">
+<div id="00cb095b" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>timestamps <span class="op">=</span> np.array([np.append(data.iloc[i][<span class="dv">5</span>], data.iloc[i].to_numpy()[<span class="dv">1</span>:<span class="dv">5</span>] <span class="op">+</span> data.iloc[i].to_numpy()[<span class="dv">5</span>]) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>)])</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>timestamps</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/tmp/ipykernel_7854/3428139913.py:1: FutureWarning:
+<pre><code>/tmp/ipykernel_25401/3428139913.py:1: FutureWarning:
 
 Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
 </code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="42">
+<div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>array([[  3.69,   6.89,   9.21,  14.31,  23.17],
        [ 69.82,  76.53,  81.87,  92.93, 113.74],
        [143.96, 156.42, 168.24, 192.57, 245.38],
@@ -157,11 +157,11 @@ Series.__getitem__ treating keys as positions is deprecated. In a future version
 </div>
 </div>
 <p>calculate dN/dt</p>
-<div id="36cf217f" class="cell" data-execution_count="4">
+<div id="371b21c2" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> <span class="bu">list</span>(timestamps[:, <span class="dv">1</span>:] <span class="op">-</span> timestamps[:, :<span class="op">-</span><span class="dv">1</span>])</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>dNdt <span class="op">=</span> np.array([[<span class="dv">1</span><span class="op">/</span>dt[i][j] <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span> (<span class="dv">4</span>)] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>)])</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>dNdt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="43">
+<div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>array([[0.3125    , 0.43103448, 0.19607843, 0.11286682],
        [0.1490313 , 0.18726592, 0.09041591, 0.04805382],
        [0.08025682, 0.08460237, 0.04110152, 0.01893581],
@@ -173,7 +173,7 @@ Series.__getitem__ treating keys as positions is deprecated. In a future version
 <p><span class="math display">\[
 \frac{d N}{d t} = k N = kN_0 e^{k t} \implies \ln(\frac{d N}{d t}) = \ln(kN_0 e^{k t}) = \ln(kN_0) + k t
 \]</span></p>
-<div id="00ea58aa" class="cell" data-execution_count="5">
+<div id="299c593c" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Time Derivative of Charge Over Time"</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Time (s)"</span>) </span>
@@ -190,12 +190,12 @@ Series.__getitem__ treating keys as positions is deprecated. In a future version
 </div>
 </div>
 <p>We realised here that we did the experiment wrong and needed to measure the change in charge on one line specifically. So now we have 4 linear datasets (spread out over 4 trials) to plot and fit. We took some more data after the fact to get enough but it ended up skewing our results a lot probably due to the long wait time and minimal radon, so we will ommit it</p>
-<div id="307fe0fa" class="cell" data-execution_count="6">
+<div id="2b45132f" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dNdt <span class="op">=</span> dNdt[:<span class="op">-</span><span class="dv">1</span>].T</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>timestamps <span class="op">=</span> timestamps.T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now we can plot and fit the data</p>
-<div id="0e02c871" class="cell" data-execution_count="7">
+<div id="3bad4398" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fits <span class="op">=</span> []</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>cmap <span class="op">=</span> plt.get_cmap(<span class="st">"Set1"</span>)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
@@ -225,7 +225,7 @@ Series.__getitem__ treating keys as positions is deprecated. In a future version
 </div>
 </div>
 <p>We can see the fits are roughly exponential, and this is the best we can get</p>
-<div id="9b60216f" class="cell" data-execution_count="8">
+<div id="62bd1224" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, fit <span class="kw">in</span> <span class="bu">enumerate</span>(fits):</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  m <span class="op">=</span> fit[<span class="dv">0</span>]</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  b <span class="op">=</span> fit[<span class="dv">1</span>]</span>
@@ -253,7 +253,7 @@ Series.__getitem__ treating keys as positions is deprecated. In a future version
 \]</span></p>
 <p>only <span class="math inline">\(y_0\)</span> needs to be recalculated, whereas <span class="math inline">\(m\)</span> can stay the same</p>
 <p>Therefore we get</p>
-<div id="e6ba08c6" class="cell" data-execution_count="9">
+<div id="fe61c268" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, fit <span class="kw">in</span> <span class="bu">enumerate</span>(fits):</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  k <span class="op">=</span> fit[<span class="dv">0</span>]</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  y0 <span class="op">=</span> np.exp(fit[<span class="dv">1</span>])</span>
@@ -279,7 +279,7 @@ Series.__getitem__ treating keys as positions is deprecated. In a future version
 x_\text{combined} = \frac{\Sigma x_i/\sigma_i}{\Sigma 1/\sigma_i},
 \sigma_\text{combined} = \frac{1}{\Sigma 1/\sigma_i}
 \]</span></p>
-<div id="c389a125" class="cell" data-execution_count="10">
+<div id="0eca13ad" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fits <span class="op">=</span> np.array(fits)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>slopes <span class="op">=</span> fits[:, <span class="dv">0</span>]</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>ints <span class="op">=</span> fits[:, <span class="dv">1</span>]</span>
@@ -301,7 +301,7 @@ y_0 = e^b
 <p>and the error is then <span class="math display">\[
 \sigma_{y_0} = \sigma_b \cdot \frac{\partial y_0}{\partial b} = \sigma_b \cdot e^b = \sigma_b \cdot y_0
 \]</span></p>
-<div id="cd03a8f9" class="cell" data-execution_count="11">
+<div id="683db17f" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>y0_tot <span class="op">=</span> [np.exp(b_tot[<span class="dv">0</span>]), b_tot[<span class="dv">1</span>]]</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>y0_tot[<span class="dv">1</span>] <span class="op">=</span> y0_tot[<span class="dv">1</span>]<span class="op">*</span>y0_tot[<span class="dv">0</span>]</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"k_exp: </span><span class="sc">{</span><span class="op">-</span>np<span class="sc">.</span>log(<span class="dv">2</span>)<span class="op">/</span><span class="dv">55</span><span class="sc">}</span><span class="ss">"</span>)</span>
@@ -316,7 +316,7 @@ b: 0.9921+-22.2700</code></pre>
 </div>
 </div>
 <p>due to the small number of trials and large error from using multiple ticks in the experiment incorrectly we have an insane ammount of error but regarless our values do agree with the theoretical values. Then we get that our half life is approximately</p>
-<div id="a43b57a8" class="cell" data-execution_count="12">
+<div id="645cf5d8" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>half_life <span class="op">=</span> <span class="op">-</span>np.log(<span class="dv">2</span>)<span class="op">/</span>m_tot[<span class="dv">0</span>]</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>half_life_err <span class="op">=</span> <span class="op">-</span>half_life <span class="op">*</span> m_tot[<span class="dv">1</span>]<span class="op">/</span>m_tot[<span class="dv">0</span>]</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"half life: </span><span class="sc">{</span>half_life<span class="sc">:.4f}</span><span class="ss">+-</span><span class="sc">{</span>half_life_err<span class="sc">:.4e}</span><span class="ss">"</span>)</span>
@@ -327,7 +327,7 @@ b: 0.9921+-22.2700</code></pre>
 </div>
 </div>
 <p>Individual fit half lives</p>
-<div id="0cdd5c22" class="cell" data-execution_count="13">
+<div id="c9d772c8" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, fit <span class="kw">in</span> <span class="bu">enumerate</span>(fits):</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  k <span class="op">=</span> fit[<span class="dv">0</span>]</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  half_life <span class="op">=</span> <span class="op">-</span>np.log(<span class="dv">2</span>)<span class="op">/</span>k[<span class="dv">0</span>]</span>

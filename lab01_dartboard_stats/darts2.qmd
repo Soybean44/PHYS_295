@@ -1,5 +1,5 @@
 ---
-title: darts2
+title: "Lab 1: Dartboard Statistics Part 2"
 jupyter: python3
 ---
 
@@ -73,7 +73,7 @@ def N(x, mean, std):
 Plot the class wide histogram
 
 ```{python}
-X = np.arange(-20,20, 0.1)
+X = np.arange(-20,20, 0.1)+0.5
 plt.figure()
 plt.title("Histogram of Classwide Dart Strikes (w/ Outlier)")
 plt.xlabel("Bins")
@@ -93,7 +93,7 @@ plt.figure()
 plt.title("Histogram of Personal Dart Strikes")
 plt.xlabel("Bins")
 plt.ylabel("Counts")
-plt.hist(my_strikes, bins=41, range=(-20,20), label="Dart Strikes")
+plt.hist(my_strikes, np.arange(-20,21, 1), range=(-20,20), label="Dart Strikes")
 plt.plot(X, len(my_strikes)*N(X, mean(my_strikes), std(my_strikes)), label="Distribution")
 plt.legend()
 plt.show()
@@ -118,11 +118,12 @@ print(f"""Fixed Strikes:
 Now we Plot without outliers
 
 ```{python}
+X = np.arange(-20,20, 0.1)
 plt.figure()
 plt.title("Histogram of Classwide Dart Strikes (w/o Outlier)")
 plt.xlabel("Bins")
 plt.ylabel("Counts")
-plt.hist(fixed_strikes, bins=41, label="Dart Strikes")
+plt.hist(fixed_strikes, np.arange(-20,21, 1), label="Dart Strikes")
 plt.plot(X, len(fixed_strikes)*N(X, mean(fixed_strikes), std(fixed_strikes)), label="Distribution")
 plt.legend()
 plt.show()
@@ -164,18 +165,4 @@ print(f"""\nMy Stats:
   P-value: {p_value}""")
 ```
 
-The class p-value is astronomically small so we can safely assume the data is normal, however the p-value of the personal data does not have a good fit. This can be attributed to the multimodal nature of the data (two significant peaks at 0 and 3) 
-
-```{python}
-my_bins = [my_bins[i] for i in range(0,len(my_bins),2)]
-if len(my_counts) % 2 == 1:
-  my_counts = np.append(my_counts, [0])
-my_counts = np.array([my_counts[i] + my_counts[i+1] for i in range(0,len(my_counts)-1, 2)])
-
-my_expected = len(my_strikes)*N(my_bins, mean(my_strikes), std(my_strikes))
-
-chi2_stat, p_value = scipy.stats.chisquare(my_counts, f_exp=my_expected, sum_check=False)
-print(f"""\nMy Stats:
-  Chi-square statistic: {chi2_stat}
-  P-value: {p_value}""")
-```
+The class p-value is astronomically small, which means we reject our null hypothesis that the data follows a normal distribution. This is mainly due to the fac that the $\chi^2$ test is far too sensitive for large sample sizes whereas our data is larger larger than a typical significance level of 0.05 meaning it doesnt reject the null hypothesis and is normally distributed according to our null hypothesis. 

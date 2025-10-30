@@ -39,7 +39,7 @@ bg_count_rate = bg_counts/bg_time
 bg_count_rate_err = bg_count_rate*np.sqrt(
   (bg_counts_err/bg_counts)**2 + (time_err/bg_time)
 )
-print(f"mean_counts: {mean_counts}") 
+print(f"mean_counts: {mean_counts}+-{mean_err:.4f}") 
 print(f"bg_count_rate: {bg_count_rate:.4e}+-{bg_count_rate_err:.4e} s^-1") 
 print(f"mean_count_rate: {mean_count_rate:.4f}+-{mean_count_rate_err:.4f} s^-1") 
 ```
@@ -57,7 +57,6 @@ delta_t_dead = sp.sqrt(sum(d**2 * sp.diff(t_dead,c)**2 for c,d in zip(counts, er
 
 # Define numeric values
 time_rel_error = time_err/100 
-print(time_rel_error)
 vals = {
   c1: 112.15, 
   c2: 105.92,

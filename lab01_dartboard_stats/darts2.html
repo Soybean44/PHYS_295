@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.31">
+<meta name="generator" content="quarto-1.7.32">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>darts2</title>
+<title>Lab 1: Dartboard Statistics Part 2</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -65,7 +65,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="darts2_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="darts2_files/libs/quarto-html/anchor.min.js"></script>
 <link href="darts2_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="darts2_files/libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="darts2_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="darts2_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="darts2_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="darts2_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -73,6 +73,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -84,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">darts2</h1>
+<h1 class="title">Lab 1: Dartboard Statistics Part 2</h1>
 </div>
 
 
@@ -102,20 +131,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>Start with our imports</p>
-<div id="c6b30fad" class="cell" data-execution_count="1">
+<div id="9a7c314a" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>First we grab our data</p>
-<div id="2b8480da" class="cell" data-execution_count="2">
+<div id="4d750442" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dartboard_data <span class="op">=</span> pd.read_csv(<span class="st">"combined_dart_strikes.csv"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>my_data <span class="op">=</span> pd.read_csv(<span class="st">"Shahid_Sovereign_dartboard.csv"</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>my_strikes <span class="op">=</span> my_data[<span class="st">"Dart Strike"</span>].to_numpy()</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>dart_strikes <span class="op">=</span> dartboard_data[<span class="st">"Dart strike"</span>].to_numpy()</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>dartboard_data.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="282">
+<div class="cell-output cell-output-display" data-execution_count="309">
 <div>
 
 
@@ -154,7 +183,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Create a function to calculate the mean and std of an array</p>
-<div id="4b77b1ad" class="cell" data-execution_count="3">
+<div id="0246d542" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mean(arr):</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">sum</span>(arr)<span class="op">/</span><span class="bu">len</span>(arr)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -162,7 +191,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.sqrt((<span class="bu">sum</span>((arr <span class="op">-</span> mean(arr))<span class="op">**</span><span class="dv">2</span>))<span class="op">/</span>(<span class="bu">len</span>(arr)<span class="op">-</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Get the mean and std</p>
-<div id="aa569d06" class="cell" data-execution_count="4">
+<div id="60ebb77c" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Numpy Data"</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"""My Data:</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ss">  mean: </span><span class="sc">{</span>my_strikes<span class="sc">.</span>mean()<span class="sc">:.4f}</span></span>
@@ -186,7 +215,7 @@ Class Data:
   std_uncertainty: 0.0682</code></pre>
 </div>
 </div>
-<div id="c6b8db6c" class="cell" data-execution_count="5">
+<div id="e2e323b6" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"My Data"</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"""My Data:</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ss">  mean: </span><span class="sc">{</span>mean(my_strikes)<span class="sc">:.4f}</span></span>
@@ -211,7 +240,7 @@ Class Data:
 </div>
 </div>
 <p>Define a function for the distribution</p>
-<div id="28e62c89" class="cell" data-execution_count="6">
+<div id="7bab6600" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> N(x, mean, std):</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="dv">1</span><span class="op">/</span>(std<span class="op">*</span>np.sqrt(<span class="dv">2</span><span class="op">*</span>np.pi)) <span class="op">*</span> np.exp(<span class="op">-</span>((x<span class="op">-</span>mean)<span class="op">**</span><span class="dv">2</span>)<span class="op">/</span>(<span class="dv">2</span><span class="op">*</span>std<span class="op">**</span><span class="dv">2</span>))</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -219,8 +248,8 @@ Class Data:
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># total_num_events*N(x,mean,std)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Plot the class wide histogram</p>
-<div id="5673bbf6" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.arange(<span class="op">-</span><span class="dv">20</span>,<span class="dv">20</span>, <span class="fl">0.1</span>)</span>
+<div id="0ce9b14b" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.arange(<span class="op">-</span><span class="dv">20</span>,<span class="dv">20</span>, <span class="fl">0.1</span>)<span class="op">+</span><span class="fl">0.5</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Histogram of Classwide Dart Strikes (w/ Outlier)"</span>)</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Bins"</span>)</span>
@@ -238,13 +267,13 @@ Class Data:
 </div>
 </div>
 <p>Plot my histogram</p>
-<div id="05f3d5a0" class="cell" data-execution_count="8">
+<div id="9deed47d" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.arange(<span class="op">-</span><span class="dv">20</span>,<span class="dv">20</span>, <span class="fl">0.1</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Histogram of Personal Dart Strikes"</span>)</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Bins"</span>)</span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Counts"</span>)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>plt.hist(my_strikes, bins<span class="op">=</span><span class="dv">41</span>, <span class="bu">range</span><span class="op">=</span>(<span class="op">-</span><span class="dv">20</span>,<span class="dv">20</span>), label<span class="op">=</span><span class="st">"Dart Strikes"</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>plt.hist(my_strikes, np.arange(<span class="op">-</span><span class="dv">20</span>,<span class="dv">21</span>, <span class="dv">1</span>), <span class="bu">range</span><span class="op">=</span>(<span class="op">-</span><span class="dv">20</span>,<span class="dv">20</span>), label<span class="op">=</span><span class="st">"Dart Strikes"</span>)</span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>plt.plot(X, <span class="bu">len</span>(my_strikes)<span class="op">*</span>N(X, mean(my_strikes), std(my_strikes)), label<span class="op">=</span><span class="st">"Distribution"</span>)</span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -257,14 +286,14 @@ Class Data:
 </div>
 </div>
 <p>Check for outliers</p>
-<div id="b21b6def" class="cell" data-execution_count="9">
+<div id="30ca9a75" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>np.sort(dart_strikes)[<span class="op">-</span><span class="dv">5</span>:]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="289">
+<div class="cell-output cell-output-display" data-execution_count="316">
 <pre><code>array([20, 20, 20, 20, 47])</code></pre>
 </div>
 </div>
 <p>We should not have this outlier since it is beyond our bins, so we scap the one bad datapoint, and recalculate the mean and std</p>
-<div id="91a62c1e" class="cell" data-execution_count="10">
+<div id="18a35767" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fixed_strikes <span class="op">=</span> dart_strikes[dart_strikes <span class="op">&lt;=</span> <span class="dv">20</span>]</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"""Fixed Strikes:</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ss">  mean: </span><span class="sc">{</span>mean(fixed_strikes)<span class="sc">:.4f}</span></span>
@@ -278,15 +307,16 @@ Class Data:
 </div>
 </div>
 <p>Now we Plot without outliers</p>
-<div id="d9e97861" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Histogram of Classwide Dart Strikes (w/o Outlier)"</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Bins"</span>)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Counts"</span>)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>plt.hist(fixed_strikes, bins<span class="op">=</span><span class="dv">41</span>, label<span class="op">=</span><span class="st">"Dart Strikes"</span>)</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>plt.plot(X, <span class="bu">len</span>(fixed_strikes)<span class="op">*</span>N(X, mean(fixed_strikes), std(fixed_strikes)), label<span class="op">=</span><span class="st">"Distribution"</span>)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d4a4d421" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.arange(<span class="op">-</span><span class="dv">20</span>,<span class="dv">20</span>, <span class="fl">0.1</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Histogram of Classwide Dart Strikes (w/o Outlier)"</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Bins"</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Counts"</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>plt.hist(fixed_strikes, np.arange(<span class="op">-</span><span class="dv">20</span>,<span class="dv">21</span>, <span class="dv">1</span>), label<span class="op">=</span><span class="st">"Dart Strikes"</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>plt.plot(X, <span class="bu">len</span>(fixed_strikes)<span class="op">*</span>N(X, mean(fixed_strikes), std(fixed_strikes)), label<span class="op">=</span><span class="st">"Distribution"</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -296,7 +326,7 @@ Class Data:
 </div>
 </div>
 <p>Get the bins and counts in the bins</p>
-<div id="dabcd2ab" class="cell" data-execution_count="12">
+<div id="98a3f8a8" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>class_bins, class_counts <span class="op">=</span> np.unique(fixed_strikes, return_counts<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>my_bins, my_counts <span class="op">=</span> np.unique(my_strikes, return_counts<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -306,7 +336,7 @@ Class Data:
 <span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>my_expected <span class="op">=</span> <span class="bu">len</span>(my_strikes)<span class="op">*</span>N(my_bins, mean(my_strikes), std(my_strikes))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Perform a chi^2 test on each dataset</p>
-<div id="b97122ce" class="cell" data-execution_count="13">
+<div id="2182b4af" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Class Wide</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>chi2_stat, p_value <span class="op">=</span> scipy.stats.chisquare(class_counts, f_exp<span class="op">=</span>class_expected, sum_check<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">#chi2_stat = np.sum((class_counts - class_expected)**2 / class_expected)</span></span>
@@ -330,8 +360,8 @@ Class Data:
 <pre><code>Class Stats:
   #-counts: 41
   #-bins: 41
-  Chi-square statistic: 198.46991860479932
-  P-value: 7.004836864455849e-23
+  Chi-square statistic: 198.46991860479906
+  P-value: 7.004836864456655e-23
 
 My Stats:
   #-counts: 25
@@ -340,26 +370,7 @@ My Stats:
   P-value: 0.592651908460754</code></pre>
 </div>
 </div>
-<p>The class p-value is astronomically small so we can safely assume the data is normal, however the p-value of the personal data does not have a good fit. This can be attributed to the multimodal nature of the data (two significant peaks at 0 and 3)</p>
-<div id="387233ad" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>my_bins <span class="op">=</span> [my_bins[i] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="bu">len</span>(my_bins),<span class="dv">2</span>)]</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">len</span>(my_counts) <span class="op">%</span> <span class="dv">2</span> <span class="op">==</span> <span class="dv">1</span>:</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  my_counts <span class="op">=</span> np.append(my_counts, [<span class="dv">0</span>])</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>my_counts <span class="op">=</span> np.array([my_counts[i] <span class="op">+</span> my_counts[i<span class="op">+</span><span class="dv">1</span>] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="bu">len</span>(my_counts)<span class="op">-</span><span class="dv">1</span>, <span class="dv">2</span>)])</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>my_expected <span class="op">=</span> <span class="bu">len</span>(my_strikes)<span class="op">*</span>N(my_bins, mean(my_strikes), std(my_strikes))</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>chi2_stat, p_value <span class="op">=</span> scipy.stats.chisquare(my_counts, f_exp<span class="op">=</span>my_expected, sum_check<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"""</span><span class="ch">\n</span><span class="ss">My Stats:</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="ss">  Chi-square statistic: </span><span class="sc">{</span>chi2_stat<span class="sc">}</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="ss">  P-value: </span><span class="sc">{</span>p_value<span class="sc">}</span><span class="ss">"""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-My Stats:
-  Chi-square statistic: 102.38021847168638
-  P-value: 1.9003468707377165e-16</code></pre>
-</div>
-</div>
+<p>The class p-value is astronomically small, which means we reject our null hypothesis that the data follows a normal distribution. This is mainly due to the fac that the <span class="math inline">\(\chi^2\)</span> test is far too sensitive for large sample sizes whereas our data is larger larger than a typical significance level of 0.05 meaning it doesnt reject the null hypothesis and is normally distributed according to our null hypothesis.</p>
 
 </main>
 <!-- /main column -->
