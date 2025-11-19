@@ -1,0 +1,56 @@
+---
+title: "Lab 5: Faraday"
+jupyter: python3
+---
+
+Import libraries
+
+```{python}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
+```
+
+Import our data
+
+```{python}
+no_rod = pd.read_csv("no_rod.csv")
+with_rod = pd.read_csv("with_rod.csv")
+```
+
+Plot it around 0 (Wrapping between -180 and 180)
+
+```{python}
+x = [x if x < 180 else x-360 for x in list(no_rod["angle"])]
+y = list(no_rod["voltage"])
+x_rod = [x if x < 180 else x-360 for x in list(with_rod["angle"])]
+y_rod = list(with_rod["voltage"])
+plt.figure()
+plt.scatter(x,y)
+plt.scatter(x_rod,y_rod)
+plt.plot()
+```
+
+fit the data over a cosine curve
+
+```{python}
+def cosine(x, a, b, c):
+  return a*np.cos(b*x - c)
+curve_fit(cosine,no_rod["angle"], no_rod["voltage"])
+
+```
+
+## DC Verlet
+
+```{python}
+verlet1 = pd.read_csv("dc_verdet_1.csv")
+verlet2 = pd.read_csv("dc_verdet_2.csv")
+```
+
+```{python}
+plt.figure()
+plt.scatter(verlet1["current"],verlet1["angle change"])
+plt.scatter(verlet2["current"],verlet2["angle change"])
+plt.show()
+```

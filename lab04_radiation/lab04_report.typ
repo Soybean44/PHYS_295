@@ -5,7 +5,7 @@
   author: "Sovereign SHahid",
   partners: ("Konal Shah"),
   
-  abstract: []
+  abstract: [We conduct an experiment to see the probabilistic distribution of radioactive decay events from a Cesium-137 source. We found a value of $21.3623 plus.minus 1.6239$ cps for the source rate with a G-M Tube that has a dead time found experimentally to be $1.5001 times 10^(-3) plus.minus 8.8366 times 10^(-7)$ s.]
 )
 
 = Introduction
@@ -73,7 +73,7 @@ We were suspicious of the counts per second being larger for Counts 2, especiall
     [2], [10681]
 ), caption : [Redoing counts for Counts 2. From this we see there is just so much statistical variation we could not tell a difference.])
 
-From this we calculated count rate for each source, using our new data for the second source as to make sure the distance did not affect our data. From this we got a dead time of $tau_(op("dead")) = 1.5001 times 10^-3 plus.minus 8.8366 times 10^-7$ s. As for the counted probabilistic data, we got a list of 100 counts like so
+From this we calculated count rate for each source, using our new data for the second source as to make sure the distance did not affect our data. From this we got a dead time of $tau_(op("dead")) = 1.5001 times 10^(-3) plus.minus 8.8366 times 10^(-7)$ s. As for the counted probabilistic data, we got a list of 100 counts like so
 
 #figure(
   table(
@@ -108,16 +108,41 @@ As well it returned that the Mean Counts over 100s was $216.74$ with an uncertai
 
 From this we got a counting rate of $C_(op("total")) = 21.6740 plus.minus 1.6239$ cps. Most calculations of uncertainty were done through the symbolic math library _Sympy_ which allows us to easily propagate uncertainty through symbolic expressions programatically, mainly for the dead time. Whereas for the statistical analysis most uncertainties were done manually as the number of variables here were small enough to handle, by using formulae for the subtraction and division of error. 
 
-To correct for the background radiation we just subtract the experimentally found background count which we found was $0.31165 plus.minus 1.77 times 10^-3$ cps. Then our source cps was found to be
+To correct for the background radiation we just subtract the experimentally found background count which we found was $0.31165 plus.minus 1.77 times 10^(-3)$ cps. Then our source cps was found to be
 $21.3623 plus.minus 1.6239$ cps.
 
 = Discussion
 
 We found some acceptable values for count rates, with our sources, However our dead time has a lot of uncertainty due to the change in distance, but since that affects the count rate in a nonstandard way, we cannot propagate it easily. In reality we should redo that experiment if an experimental error like that happens. 
 
-Even with our error in the dead time, we can use it to make our accurate theoretically. If the dead time contributes no extra counts then the counts realistically fall over a time interval of $t-N tau_(op("dead"))$. 
+Even with our error in the dead time, we can use it to make our accurate theoretically. If the dead time contributes no extra counts then the counts realistically fall over a time interval of $t' = t-N tau_(op("dead"))$, where $t'$ is the actual time interval. This means our counting rate is now 
+
+$
+C = N/(t - N tau)
+$ 
+
+This means we would count $N$ counts over a longer time $t' + N tau$  making the count rate look lower than it was. We can then compare the two counting rates, asserting that we are less than 1% off 
+
+$
+N/(t' + N tau) >  99/100 N/t' => 100 t' > 99(t' + N tau) => t' > 99 N tau => tau < 1/99 N/t'
+$
+
+For our dead time of around 1.5ms, we can say then solve for our actual count rate $C$ to get 
+
+$
+&1.5001 times 10^(-3) < 1/99 C \
+&=> 1.5001 times 10^-1 - 1.5001 times 10^(-3) < C
+&=> 0.14999 < C
+$
+
+In our case even with our high dead time, we end up having enough resolution to justify that most of our measurements are accurate to 1%, since they are all greater than this value. This definitely does not affect our high count rate data at all.
 
 = Conclusion
+
+We found the dead time of a G-M Tube was $1.5001 times 10^(-3) plus.minus 8.8366 times 10^(-7)$ s. That was used to measure the background radiation which gave us a count rate of $0.31165 plus.minus 1.77 times 10^(-3)$ cps and that our source had a count rate of $21.3623 plus.minus 1.6239$ cps. 
+
+All of these values agree closely with the expected values we were shooting for, outside of the dead time, which was one magnitude off from the expected. Most error in the results can be attributed to systematic error, but even then we don't have to account for that error in our measurement as it barely affects our data and results we achieved
+
 = Acknowledgements
 I'd like to acknowledge my professor Carsten B. Krauss and my lab partner Konal Shah, for helping me with the lab as well as our T.A. Michael Dunsmore, who gave us guidance during the lab.
 
@@ -127,3 +152,5 @@ I'd like to acknowledge my professor Carsten B. Krauss and my lab partner Konal 
 #heading(level: 1, numbering: none)[Appendix]
 
 All code and data can be found at #link("https://github.com/Soybean44/PHYS_295") under the `lab04_radiation/geiger.qmd` file with a PDF copy at `lab04_radiation/geiger.pdf`. The counting data is located at `lab04_radiation/geiger.csv`
+
+
