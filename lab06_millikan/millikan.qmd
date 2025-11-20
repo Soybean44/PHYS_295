@@ -23,11 +23,11 @@ I had no lab partner for this lab, so I was getting accustomed to doing a lab on
 Start by importing our data
 
 ```{python}
-day1 = pd.read_csv('day1.csv')
-day1_long = pd.read_csv('day1_long.csv')
+day1 = pd.read_csv('data/day1.csv')
+day1_long = pd.read_csv('data/day1_long.csv')
 # day2 data is already in fall/rise format so convert it
-day2_fall = pd.read_csv('day2_fall.csv').to_numpy()[:,1:]
-day2_rise = pd.read_csv('day2_rise.csv').to_numpy()[:,1:]
+day2_fall = pd.read_csv('data/day2_fall.csv').to_numpy()[:,1:]
+day2_rise = pd.read_csv('data/day2_rise.csv').to_numpy()[:,1:]
 ```
 
 `day1` and `day1_long` contain timestamps for when the oil drop hits a reticle. We need to calculate the fall and rise times from these timestamps.
@@ -65,6 +65,11 @@ day1_combined = combine_times(day1_fall, day1_rise, 1)
 day1_long_combined = combine_times(day1_long_fall, day1_long_rise, 1)
 day2_combined = combine_times(day2_fall, day2_rise, 2)
 drops = np.concatenate((day1_combined, day1_long_combined, day2_combined), axis=0)
+
+# output to csv for use in lab report table
+drops_df = pd.DataFrame(np.round(drops, 2), columns=['Fall Time', 'Fall Std', 'Rise Time', 'Rise Std', 'Day'])
+drops_df.insert(0, 'Drop #', np.arange(1, len(drops_df)+1))
+drops_df.to_csv('data/drop_stats.csv', index=False)
 ```
 
 Plot the fall and rise times of drops with error bars
@@ -147,7 +152,11 @@ q_err = q * np.sqrt(
   (v_rise_err/(v_fall+v_rise))**2 +
   (1/(2*v_fall) + 1/(v_fall + v_rise))**2 * v_fall_err**2
 )
-pd.DataFrame({"charge": q, "error": q_err})
+
+# output to csv for use in lab report table
+charges_df = pd.DataFrame({ "Drop #": drops_df["Drop #"], "Charge": q, "Error": q_err})
+charges_df.to_csv('data/drop_charges.csv', index=False, float_format='%.2e')
+charges_df
 ```
 
 Now we can plot q
@@ -164,7 +173,15 @@ plt.show()
 For some reason, we had a really large uncertainty on the 2nd drop, which means that it is hard to see the quantization of charge in this plot. However, if we ignore that point can see the quantization more clearly. Note we only ignore this point for visualization, not for any calculations.
 
 ```{python}
-plt.figure()
+# Plot both for easier comparison and to make the lab report look nicer
+plt.figure(figsize=(12,5))
+plt.subplot(1,2,1)
+X = np.arange(0, len(q), 1) + 1
+plt.errorbar(X, q, yerr=q_err, fmt='o')
+plt.xlabel('Drop Number')
+plt.ylabel('Charge (C)')
+plt.title('Charge on Oil Drops')
+plt.subplot(1,2,2)
 Q = q[~(X==2)]
 Q_err = q_err[~(X==2)]
 X = np.arange(0, len(Q), 1) + 1

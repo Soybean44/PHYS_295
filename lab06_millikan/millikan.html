@@ -131,7 +131,7 @@ window.Quarto = {
 
 
 <p>Import Libraries &amp; Setup</p>
-<div id="24b51111" class="cell" data-execution_count="1">
+<div id="e5500ab6" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -145,15 +145,15 @@ window.Quarto = {
 <section id="data-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="data-analysis">Data Analysis</h2>
 <p>Start by importing our data</p>
-<div id="ee0bc45d" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>day1 <span class="op">=</span> pd.read_csv(<span class="st">'day1.csv'</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>day1_long <span class="op">=</span> pd.read_csv(<span class="st">'day1_long.csv'</span>)</span>
+<div id="1e88ee1d" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>day1 <span class="op">=</span> pd.read_csv(<span class="st">'data/day1.csv'</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>day1_long <span class="op">=</span> pd.read_csv(<span class="st">'data/day1_long.csv'</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># day2 data is already in fall/rise format so convert it</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>day2_fall <span class="op">=</span> pd.read_csv(<span class="st">'day2_fall.csv'</span>).to_numpy()[:,<span class="dv">1</span>:]</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>day2_rise <span class="op">=</span> pd.read_csv(<span class="st">'day2_rise.csv'</span>).to_numpy()[:,<span class="dv">1</span>:]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>day2_fall <span class="op">=</span> pd.read_csv(<span class="st">'data/day2_fall.csv'</span>).to_numpy()[:,<span class="dv">1</span>:]</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>day2_rise <span class="op">=</span> pd.read_csv(<span class="st">'data/day2_rise.csv'</span>).to_numpy()[:,<span class="dv">1</span>:]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>day1</code> and <code>day1_long</code> contain timestamps for when the oil drop hits a reticle. We need to calculate the fall and rise times from these timestamps.</p>
-<div id="304ef4f4" class="cell" data-execution_count="3">
+<div id="b51f9f85" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert dataframes to numpy arrays </span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>day1 <span class="op">=</span> day1.to_numpy()</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>day1_long <span class="op">=</span> day1_long.to_numpy()</span>
@@ -172,7 +172,7 @@ window.Quarto = {
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>day1_long_rise <span class="op">=</span> day1_long_times[:, <span class="dv">1</span>::<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now we get the mean fall and rise times for each drop</p>
-<div id="89dd7372" class="cell" data-execution_count="4">
+<div id="9b03e973" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> combine_times(fall, rise, day):</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    fall_means <span class="op">=</span> np.mean(fall, axis<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    fall_stds <span class="op">=</span> np.std(fall, axis<span class="op">=</span><span class="dv">1</span>)</span>
@@ -183,10 +183,15 @@ window.Quarto = {
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>day1_combined <span class="op">=</span> combine_times(day1_fall, day1_rise, <span class="dv">1</span>)</span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>day1_long_combined <span class="op">=</span> combine_times(day1_long_fall, day1_long_rise, <span class="dv">1</span>)</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>day2_combined <span class="op">=</span> combine_times(day2_fall, day2_rise, <span class="dv">2</span>)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>drops <span class="op">=</span> np.concatenate((day1_combined, day1_long_combined, day2_combined), axis<span class="op">=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>drops <span class="op">=</span> np.concatenate((day1_combined, day1_long_combined, day2_combined), axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># output to csv for use in lab report table</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>drops_df <span class="op">=</span> pd.DataFrame(np.<span class="bu">round</span>(drops, <span class="dv">2</span>), columns<span class="op">=</span>[<span class="st">'Fall Time'</span>, <span class="st">'Fall Std'</span>, <span class="st">'Rise Time'</span>, <span class="st">'Rise Std'</span>, <span class="st">'Day'</span>])</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>drops_df.insert(<span class="dv">0</span>, <span class="st">'Drop #'</span>, np.arange(<span class="dv">1</span>, <span class="bu">len</span>(drops_df)<span class="op">+</span><span class="dv">1</span>))</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>drops_df.to_csv(<span class="st">'data/drop_stats.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Plot the fall and rise times of drops with error bars</p>
-<div id="e761b57f" class="cell" data-execution_count="5">
+<div id="58f64002" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="bu">len</span>(drops), <span class="dv">1</span>) <span class="op">+</span> <span class="dv">1</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>plt.figure</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plt.errorbar(X, drops[:,<span class="dv">0</span>], yerr<span class="op">=</span>drops[:,<span class="dv">1</span>], fmt<span class="op">=</span><span class="st">'o'</span>, label<span class="op">=</span><span class="st">'Fall Times'</span>)</span>
@@ -205,7 +210,7 @@ window.Quarto = {
 </div>
 </div>
 <p>As well here are two graphs of all three datasets separately to see if there are any differences between them.</p>
-<div id="164293f2" class="cell" data-execution_count="6">
+<div id="428c1d22" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>titles <span class="op">=</span> [<span class="st">'Day 1'</span>, <span class="st">'Day 1 Long'</span>, <span class="st">'Day 2'</span>]</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">5</span>))</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, curr_drops <span class="kw">in</span> <span class="bu">enumerate</span>([day1_combined, day1_long_combined, day2_combined]):</span>
@@ -230,7 +235,7 @@ window.Quarto = {
 <section id="calculating-charge" class="level2">
 <h2 class="anchored" data-anchor-id="calculating-charge">Calculating Charge</h2>
 <p>Now we can calculate the charge on each drop using the formula provided in the lab manual. We will need to define some constants first.</p>
-<div id="dc95ad6a" class="cell" data-execution_count="7">
+<div id="89d2827c" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Constants</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> <span class="fl">9.81</span>  <span class="co"># m/s^2</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="fl">8.23e-3</span>  <span class="co"># Pa.m (constant for air viscosity correction)</span></span>
@@ -249,7 +254,7 @@ window.Quarto = {
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>rho_oil <span class="op">=</span> <span class="dv">890</span>  <span class="co"># kg/m^3 (density of oil)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now we can calculate the charge on each drop</p>
-<div id="5ba6cd24" class="cell" data-execution_count="8">
+<div id="5b2c92ef" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fall_time <span class="op">=</span> drops[:,<span class="dv">1</span>]</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>fall_err <span class="op">=</span> drops[:,<span class="dv">1</span>]</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>rise_time <span class="op">=</span> drops[:,<span class="dv">2</span>]</span>
@@ -273,8 +278,12 @@ window.Quarto = {
 <span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  (v_rise_err<span class="op">/</span>(v_fall<span class="op">+</span>v_rise))<span class="op">**</span><span class="dv">2</span> <span class="op">+</span></span>
 <span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">1</span><span class="op">/</span>(<span class="dv">2</span><span class="op">*</span>v_fall) <span class="op">+</span> <span class="dv">1</span><span class="op">/</span>(v_fall <span class="op">+</span> v_rise))<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> v_fall_err<span class="op">**</span><span class="dv">2</span></span>
 <span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>pd.DataFrame({<span class="st">"charge"</span>: q, <span class="st">"error"</span>: q_err})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="77">
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co"># output to csv for use in lab report table</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>charges_df <span class="op">=</span> pd.DataFrame({ <span class="st">"Drop #"</span>: drops_df[<span class="st">"Drop #"</span>], <span class="st">"Charge"</span>: q, <span class="st">"Error"</span>: q_err})</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>charges_df.to_csv(<span class="st">'data/drop_charges.csv'</span>, index<span class="op">=</span><span class="va">False</span>, float_format<span class="op">=</span><span class="st">'</span><span class="sc">%.2e</span><span class="st">'</span>)</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>charges_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 
 
@@ -282,133 +291,159 @@ window.Quarto = {
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">charge</th>
-<th data-quarto-table-cell-role="th">error</th>
+<th data-quarto-table-cell-role="th">Drop #</th>
+<th data-quarto-table-cell-role="th">Charge</th>
+<th data-quarto-table-cell-role="th">Error</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
+<td>2</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
+<td>3</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
+<td>4</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">4</td>
+<td>5</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">5</td>
+<td>6</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">6</td>
+<td>7</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">7</td>
+<td>8</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">8</td>
+<td>9</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">9</td>
+<td>10</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">10</td>
+<td>11</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">11</td>
+<td>12</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">12</td>
+<td>13</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">13</td>
+<td>14</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">14</td>
+<td>15</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">15</td>
+<td>16</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">16</td>
+<td>17</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">17</td>
+<td>18</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">18</td>
+<td>19</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">19</td>
+<td>20</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">20</td>
+<td>21</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">21</td>
+<td>22</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">22</td>
+<td>23</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">23</td>
+<td>24</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">24</td>
+<td>25</td>
 <td>0.0000</td>
 <td>0.0000</td>
 </tr>
@@ -419,7 +454,7 @@ window.Quarto = {
 </div>
 </div>
 <p>Now we can plot q</p>
-<div id="b8fd11f6" class="cell" data-execution_count="9">
+<div id="5b91943d" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="bu">len</span>(q), <span class="dv">1</span>) <span class="op">+</span> <span class="dv">1</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>plt.errorbar(X, q, yerr<span class="op">=</span>q_err, fmt<span class="op">=</span><span class="st">'o'</span>)</span>
@@ -436,16 +471,24 @@ window.Quarto = {
 </div>
 </div>
 <p>For some reason, we had a really large uncertainty on the 2nd drop, which means that it is hard to see the quantization of charge in this plot. However, if we ignore that point can see the quantization more clearly. Note we only ignore this point for visualization, not for any calculations.</p>
-<div id="5db9a749" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> q[<span class="op">~</span>(X<span class="op">==</span><span class="dv">2</span>)]</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>Q_err <span class="op">=</span> q_err[<span class="op">~</span>(X<span class="op">==</span><span class="dv">2</span>)]</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="bu">len</span>(Q), <span class="dv">1</span>) <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>plt.errorbar(X, Q, yerr<span class="op">=</span>Q_err, fmt<span class="op">=</span><span class="st">'o'</span>)</span>
+<div id="8b4393b6" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot both for easier comparison and to make the lab report look nicer</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">5</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="bu">len</span>(q), <span class="dv">1</span>) <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>plt.errorbar(X, q, yerr<span class="op">=</span>q_err, fmt<span class="op">=</span><span class="st">'o'</span>)</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Drop Number'</span>)</span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Charge (C)'</span>)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Charge on Oil Drops (Ignoring Drop 2)'</span>)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Charge on Oil Drops'</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> q[<span class="op">~</span>(X<span class="op">==</span><span class="dv">2</span>)]</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>Q_err <span class="op">=</span> q_err[<span class="op">~</span>(X<span class="op">==</span><span class="dv">2</span>)]</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="bu">len</span>(Q), <span class="dv">1</span>) <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>plt.errorbar(X, Q, yerr<span class="op">=</span>Q_err, fmt<span class="op">=</span><span class="st">'o'</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Drop Number'</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Charge (C)'</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Charge on Oil Drops (Ignoring Drop 2)'</span>)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -456,7 +499,7 @@ window.Quarto = {
 </div>
 <p>from this it is easier to see a noticable pattern in the charges, which suggests that charge is quantized, despite the large uncertainties in some of the measurements. It seems that the more charged our oil drops are the larger the uncertainty in our measurements. This suggests that our error is systematic, likely due to some unaccounted for factor in our experiment, such as collisions with air molecules.</p>
 <p>Let us divide by the smallest charge to see if we can find integer multiples</p>
-<div id="65aa363d" class="cell" data-execution_count="11">
+<div id="81a15177" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>min_charge <span class="op">=</span> np.<span class="bu">min</span>(q)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>min_charge_err <span class="op">=</span> q_err[np.argmin(q)]</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>ratios <span class="op">=</span> q <span class="op">/</span> min_charge</span>
@@ -466,7 +509,7 @@ window.Quarto = {
 <div class="cell-output cell-output-stdout">
 <pre><code>min_charge: 5.5501e-24 ± 7.9995e-24</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="80">
+<div class="cell-output cell-output-display" data-execution_count="11">
 <div>
 
 
@@ -612,7 +655,7 @@ window.Quarto = {
 </div>
 <p>We do not have very good data, so it is hard to see integer multiples in these ratios, no matter if we divide by an integer or not. Our minimum charge is seen above and definetly does not agree with our expected value of the elementary charge of approximately <span class="math inline">\(1.6 \times 10^{-19} \text{ C}\)</span>. This is likely due to more systematic error in our measurements, most likely imprecise timing this time, as well as not having enough data to average out random errors.</p>
 <p>Now we can try to estimate the elementary charge by dividing our charges by our ratios, rounded to the nearest integer, then we can look at the weigheted average of these estimates to get a better estimate of the elementary charge.</p>
-<div id="8157e2f6" class="cell" data-execution_count="12">
+<div id="b01555be" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>int_ratios <span class="op">=</span> np.<span class="bu">round</span>(ratios)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>e_estimates <span class="op">=</span> q <span class="op">/</span> int_ratios</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>e_estimates_err <span class="op">=</span> e_estimates <span class="op">*</span> np.sqrt((q_err<span class="op">/</span>q)<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> (ratios_err<span class="op">/</span>ratios)<span class="op">**</span><span class="dv">2</span>)</span>
