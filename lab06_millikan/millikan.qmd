@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 # rounding to 4th decimal place for easier reading
-pd.options.display.float_format = '{:.4f}'.format
+pd.options.display.float_format = '{:.2e}'.format
 ```
 
 
@@ -110,7 +110,7 @@ Now we can calculate the charge on each drop using the formula provided in the l
 ```{python}
 # Constants
 g = 9.81  # m/s^2
-b = 8.23e-3  # Pa.m (constant for air viscosity correction)
+b = 8.23e-6  # Pa.m (constant for air viscosity correction)
 eta_1 = 18.52e-6  # N.s/m^2 (viscosity of air at day 1 temp)
 eta_2 = 18.48e-6  # N.s/m^2 (viscosity of air at day 2 temp)
 P_1 = 93.83  # kPa (pressure day 1)
@@ -201,12 +201,12 @@ min_charge_err = q_err[np.argmin(q)]
 ratios = q / min_charge
 ratios_err = ratios * np.sqrt((q_err/q)**2 + (min_charge_err/min_charge)**2)
 print(f"min_charge: {min_charge:.4e} ± {min_charge_err:.4e}")
-pd.DataFrame({ "ratios": ratios, "err": ratios_err}) 
+ratios_df = pd.DataFrame({ "Drop #": drops_df["Drop #"], "Charge Ratios": ratios, "Error": ratios_err}) 
+ratios_df.to_csv('data/ratios.csv', index=False, float_format='%.2f')
+ratios_df
 ```
 
-We do not have very good data, so it is hard to see integer multiples in these ratios, no matter if we divide by an integer or not. Our minimum charge is seen above and definetly does not agree with our expected value of the elementary charge of approximately $1.6 \times 10^{-19} \text{ C}$. This is likely due to more systematic error in our measurements, most likely imprecise timing this time, as well as not having enough data to average out random errors.
-
-Now we can try to estimate the elementary charge by dividing our charges by our ratios, rounded to the nearest integer, then we can look at the weigheted average of these estimates to get a better estimate of the elementary charge.
+We do not have very good data, so it is hard to see integer multiples in these ratios. If we divide by an integer we end up getting a worse fit for our estimated elementary charge, so we dont do that. Actually agrees well with the expected value of the elementary charge. Now we can try to estimate the elementary charge by dividing our charges by our ratios, rounded to the nearest integer, then we can look at the weigheted average of these estimates to get a better estimate of the elementary charge.
 
 ```{python}
 int_ratios = np.round(ratios)
@@ -218,4 +218,4 @@ e_weighted_err = np.sqrt(1 / np.sum(weights))
 print(f"Estimated elementary charge: {e_weighted_avg:.4e} ± {e_weighted_err:.4e} C")
 ```
 
-Sadly this doesn't yield much hope for us to get a good estimate of the elementary charge, as our value is still far from the expected value. Hopefully in the future we can improve our experimental methods to reduce systematic error and get better results.
+This actually agrees quite well with the accepted value of the elementary charge, which is approximately 1.602e-19 C. Overall, despite some large uncertainties in our measurements, we were able to observe the quantization of charge and estimate the elementary charge with reasonable accuracy.

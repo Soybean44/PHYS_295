@@ -12,11 +12,15 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 ```
 
+# Day 1: Direct Current
+
+## Polarization Calibration
+
 Import our data
 
 ```{python}
-no_rod = pd.read_csv("no_rod.csv")
-with_rod = pd.read_csv("with_rod.csv")
+no_rod = pd.read_csv("data/day1/no_rod.csv")
+with_rod = pd.read_csv("data/day1/with_rod.csv")
 ```
 
 Plot it around 0 (Wrapping between -180 and 180)
@@ -43,14 +47,30 @@ curve_fit(cosine,no_rod["angle"], no_rod["voltage"])
 
 ## DC Verlet
 
+Import the data
+
 ```{python}
-verlet1 = pd.read_csv("dc_verdet_1.csv")
-verlet2 = pd.read_csv("dc_verdet_2.csv")
+verlet1 = pd.read_csv("data/day1/dc_verdet_1.csv")
+verlet2 = pd.read_csv("data/day1/dc_verdet_2.csv")
 ```
+
+Plot the angle change vs intensity (read as current)
 
 ```{python}
 plt.figure()
 plt.scatter(verlet1["current"],verlet1["angle change"])
 plt.scatter(verlet2["current"],verlet2["angle change"])
 plt.show()
+```
+
+Here we are accurate to the about 2 degrees of precision, which is not a whole lot. This will be improved in the AC section.
+
+# Day 2: Alternating Current
+
+## Polarization Calibration
+
+We repeat the polarization calibration on a smaller scale. Given last day's data, we can safely assume that the rod does not affect polarization just the intensity, so we only need to take data without the rod.
+
+```{python}
+no_rod_ac = pd.read_csv("data/day2/polarization.csv")
 ```

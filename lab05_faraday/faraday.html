@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.31">
+<meta name="generator" content="quarto-1.7.32">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -65,7 +65,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="faraday_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="faraday_files/libs/quarto-html/anchor.min.js"></script>
 <link href="faraday_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="faraday_files/libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="faraday_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="faraday_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="faraday_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="faraday_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -99,19 +99,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>Import libraries</p>
-<div id="d87a15a5" class="cell" data-execution_count="1">
+<div id="15b5bae9" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> curve_fit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<section id="day-1-direct-current" class="level1">
+<h1>Day 1: Direct Current</h1>
+<section id="polarization-calibration" class="level2">
+<h2 class="anchored" data-anchor-id="polarization-calibration">Polarization Calibration</h2>
 <p>Import our data</p>
-<div id="8cc1b08a" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>no_rod <span class="op">=</span> pd.read_csv(<span class="st">"no_rod.csv"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>with_rod <span class="op">=</span> pd.read_csv(<span class="st">"with_rod.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="40173ac0" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>no_rod <span class="op">=</span> pd.read_csv(<span class="st">"data/day1/no_rod.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>with_rod <span class="op">=</span> pd.read_csv(<span class="st">"data/day1/with_rod.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Plot it around 0 (Wrapping between -180 and 180)</p>
-<div id="41f861d1" class="cell" data-execution_count="3">
+<div id="0ef30d53" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> [x <span class="cf">if</span> x <span class="op">&lt;</span> <span class="dv">180</span> <span class="cf">else</span> x<span class="op">-</span><span class="dv">360</span> <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">list</span>(no_rod[<span class="st">"angle"</span>])]</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="bu">list</span>(no_rod[<span class="st">"voltage"</span>])</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>x_rod <span class="op">=</span> [x <span class="cf">if</span> x <span class="op">&lt;</span> <span class="dv">180</span> <span class="cf">else</span> x<span class="op">-</span><span class="dv">360</span> <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">list</span>(with_rod[<span class="st">"angle"</span>])]</span>
@@ -129,24 +133,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>fit the data over a cosine curve</p>
-<div id="a902a834" class="cell" data-execution_count="4">
+<div id="973cf636" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> cosine(x, a, b, c):</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> a<span class="op">*</span>np.cos(b<span class="op">*</span>x <span class="op">-</span> c)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>curve_fit(cosine,no_rod[<span class="st">"angle"</span>], no_rod[<span class="st">"voltage"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="28">
+<div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>(array([87.13968909,  0.9775951 , -0.21783221]),
  array([[ 2.82582115e+03, -3.11764505e-02, -7.05332227e+00],
         [-3.11764505e-02,  3.29996930e-05,  4.95822609e-03],
         [-7.05332227e+00,  4.95822609e-03,  1.16400302e+00]]))</code></pre>
 </div>
 </div>
+</section>
 <section id="dc-verlet" class="level2">
 <h2 class="anchored" data-anchor-id="dc-verlet">DC Verlet</h2>
-<div id="510c6494" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>verlet1 <span class="op">=</span> pd.read_csv(<span class="st">"dc_verdet_1.csv"</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>verlet2 <span class="op">=</span> pd.read_csv(<span class="st">"dc_verdet_2.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Import the data</p>
+<div id="87708374" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>verlet1 <span class="op">=</span> pd.read_csv(<span class="st">"data/day1/dc_verdet_1.csv"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>verlet2 <span class="op">=</span> pd.read_csv(<span class="st">"data/day1/dc_verdet_2.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="a37f0cc8" class="cell" data-execution_count="6">
+<p>Plot the angle change vs intensity (read as current)</p>
+<div id="1f5d9b50" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>plt.scatter(verlet1[<span class="st">"current"</span>],verlet1[<span class="st">"angle change"</span>])</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>plt.scatter(verlet2[<span class="st">"current"</span>],verlet2[<span class="st">"angle change"</span>])</span>
@@ -159,6 +166,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>Here we are accurate to the about 2 degrees of precision, which is not a whole lot. This will be improved in the AC section.</p>
+</section>
+</section>
+<section id="day-2-alternating-current" class="level1">
+<h1>Day 2: Alternating Current</h1>
+<section id="polarization-calibration-1" class="level2">
+<h2 class="anchored" data-anchor-id="polarization-calibration-1">Polarization Calibration</h2>
+<p>We repeat the polarization calibration on a smaller scale. Given last day’s data, we can safely assume that the rod does not affect polarization just the intensity, so we only need to take data without the rod.</p>
+<div id="f8192e6d" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>no_rod_ac <span class="op">=</span> pd.read_csv(<span class="st">"data/day2/polarization.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
 </section>
 
 </main>

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.7.31">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -65,7 +65,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="millikan_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="millikan_files/libs/quarto-html/anchor.min.js"></script>
 <link href="millikan_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="millikan_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="millikan_files/libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="millikan_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="millikan_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="millikan_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -73,35 +73,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -131,12 +102,12 @@ window.Quarto = {
 
 
 <p>Import Libraries &amp; Setup</p>
-<div id="e5500ab6" class="cell" data-execution_count="1">
+<div id="5eea656d" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># rounding to 4th decimal place for easier reading</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>pd.options.display.float_format <span class="op">=</span> <span class="st">'</span><span class="sc">{:.4f}</span><span class="st">'</span>.<span class="bu">format</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>pd.options.display.float_format <span class="op">=</span> <span class="st">'</span><span class="sc">{:.2e}</span><span class="st">'</span>.<span class="bu">format</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="reflection" class="level2">
 <h2 class="anchored" data-anchor-id="reflection">Reflection</h2>
@@ -145,7 +116,7 @@ window.Quarto = {
 <section id="data-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="data-analysis">Data Analysis</h2>
 <p>Start by importing our data</p>
-<div id="1e88ee1d" class="cell" data-execution_count="2">
+<div id="2a0ef200" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>day1 <span class="op">=</span> pd.read_csv(<span class="st">'data/day1.csv'</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>day1_long <span class="op">=</span> pd.read_csv(<span class="st">'data/day1_long.csv'</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># day2 data is already in fall/rise format so convert it</span></span>
@@ -153,7 +124,7 @@ window.Quarto = {
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>day2_rise <span class="op">=</span> pd.read_csv(<span class="st">'data/day2_rise.csv'</span>).to_numpy()[:,<span class="dv">1</span>:]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>day1</code> and <code>day1_long</code> contain timestamps for when the oil drop hits a reticle. We need to calculate the fall and rise times from these timestamps.</p>
-<div id="b51f9f85" class="cell" data-execution_count="3">
+<div id="f21d4730" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert dataframes to numpy arrays </span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>day1 <span class="op">=</span> day1.to_numpy()</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>day1_long <span class="op">=</span> day1_long.to_numpy()</span>
@@ -172,7 +143,7 @@ window.Quarto = {
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>day1_long_rise <span class="op">=</span> day1_long_times[:, <span class="dv">1</span>::<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now we get the mean fall and rise times for each drop</p>
-<div id="9b03e973" class="cell" data-execution_count="4">
+<div id="488b3d0e" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> combine_times(fall, rise, day):</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    fall_means <span class="op">=</span> np.mean(fall, axis<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    fall_stds <span class="op">=</span> np.std(fall, axis<span class="op">=</span><span class="dv">1</span>)</span>
@@ -191,7 +162,7 @@ window.Quarto = {
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>drops_df.to_csv(<span class="st">'data/drop_stats.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Plot the fall and rise times of drops with error bars</p>
-<div id="58f64002" class="cell" data-execution_count="5">
+<div id="b1f93f32" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="bu">len</span>(drops), <span class="dv">1</span>) <span class="op">+</span> <span class="dv">1</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>plt.figure</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plt.errorbar(X, drops[:,<span class="dv">0</span>], yerr<span class="op">=</span>drops[:,<span class="dv">1</span>], fmt<span class="op">=</span><span class="st">'o'</span>, label<span class="op">=</span><span class="st">'Fall Times'</span>)</span>
@@ -210,7 +181,7 @@ window.Quarto = {
 </div>
 </div>
 <p>As well here are two graphs of all three datasets separately to see if there are any differences between them.</p>
-<div id="428c1d22" class="cell" data-execution_count="6">
+<div id="b1d6c334" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>titles <span class="op">=</span> [<span class="st">'Day 1'</span>, <span class="st">'Day 1 Long'</span>, <span class="st">'Day 2'</span>]</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">5</span>))</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, curr_drops <span class="kw">in</span> <span class="bu">enumerate</span>([day1_combined, day1_long_combined, day2_combined]):</span>
@@ -235,10 +206,10 @@ window.Quarto = {
 <section id="calculating-charge" class="level2">
 <h2 class="anchored" data-anchor-id="calculating-charge">Calculating Charge</h2>
 <p>Now we can calculate the charge on each drop using the formula provided in the lab manual. We will need to define some constants first.</p>
-<div id="89d2827c" class="cell" data-execution_count="7">
+<div id="2392d5c9" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Constants</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> <span class="fl">9.81</span>  <span class="co"># m/s^2</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="fl">8.23e-3</span>  <span class="co"># Pa.m (constant for air viscosity correction)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="fl">8.23e-6</span>  <span class="co"># Pa.m (constant for air viscosity correction)</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>eta_1 <span class="op">=</span> <span class="fl">18.52e-6</span>  <span class="co"># N.s/m^2 (viscosity of air at day 1 temp)</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>eta_2 <span class="op">=</span> <span class="fl">18.48e-6</span>  <span class="co"># N.s/m^2 (viscosity of air at day 2 temp)</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>P_1 <span class="op">=</span> <span class="fl">93.83</span>  <span class="co"># kPa (pressure day 1)</span></span>
@@ -254,7 +225,7 @@ window.Quarto = {
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>rho_oil <span class="op">=</span> <span class="dv">890</span>  <span class="co"># kg/m^3 (density of oil)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now we can calculate the charge on each drop</p>
-<div id="5b2c92ef" class="cell" data-execution_count="8">
+<div id="7244feb4" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fall_time <span class="op">=</span> drops[:,<span class="dv">1</span>]</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>fall_err <span class="op">=</span> drops[:,<span class="dv">1</span>]</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>rise_time <span class="op">=</span> drops[:,<span class="dv">2</span>]</span>
@@ -283,7 +254,7 @@ window.Quarto = {
 <span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>charges_df <span class="op">=</span> pd.DataFrame({ <span class="st">"Drop #"</span>: drops_df[<span class="st">"Drop #"</span>], <span class="st">"Charge"</span>: q, <span class="st">"Error"</span>: q_err})</span>
 <span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>charges_df.to_csv(<span class="st">'data/drop_charges.csv'</span>, index<span class="op">=</span><span class="va">False</span>, float_format<span class="op">=</span><span class="st">'</span><span class="sc">%.2e</span><span class="st">'</span>)</span>
 <span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>charges_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
+<div class="cell-output cell-output-display" data-execution_count="56">
 <div>
 
 
@@ -300,152 +271,152 @@ window.Quarto = {
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
 <td>1</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>1.08e-18</td>
+<td>1.50e-18</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
 <td>2</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>7.44e-16</td>
+<td>1.11e-15</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
 <td>3</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>5.49e-18</td>
+<td>7.99e-18</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
 <td>4</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>5.82e-18</td>
+<td>8.55e-18</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">4</td>
 <td>5</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>3.60e-18</td>
+<td>5.36e-18</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">5</td>
 <td>6</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>8.29e-18</td>
+<td>1.20e-17</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">6</td>
 <td>7</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>1.26e-17</td>
+<td>1.86e-17</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">7</td>
 <td>8</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>2.33e-18</td>
+<td>3.42e-18</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">8</td>
 <td>9</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>2.13e-18</td>
+<td>3.14e-18</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">9</td>
 <td>10</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>9.34e-19</td>
+<td>1.30e-18</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">10</td>
 <td>11</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>4.22e-19</td>
+<td>6.12e-19</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">11</td>
 <td>12</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>6.69e-19</td>
+<td>9.81e-19</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">12</td>
 <td>13</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>2.09e-19</td>
+<td>3.01e-19</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">13</td>
 <td>14</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>6.56e-19</td>
+<td>9.62e-19</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">14</td>
 <td>15</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>1.36e-19</td>
+<td>1.95e-19</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">15</td>
 <td>16</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>1.52e-17</td>
+<td>2.27e-17</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">16</td>
 <td>17</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>4.49e-18</td>
+<td>6.67e-18</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">17</td>
 <td>18</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>7.37e-18</td>
+<td>1.10e-17</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">18</td>
 <td>19</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>1.37e-17</td>
+<td>2.05e-17</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">19</td>
 <td>20</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>8.10e-19</td>
+<td>1.15e-18</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">20</td>
 <td>21</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>5.39e-18</td>
+<td>7.95e-18</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">21</td>
 <td>22</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>1.51e-17</td>
+<td>2.26e-17</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">22</td>
 <td>23</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>9.55e-18</td>
+<td>1.43e-17</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">23</td>
 <td>24</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>1.15e-17</td>
+<td>1.72e-17</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">24</td>
 <td>25</td>
-<td>0.0000</td>
-<td>0.0000</td>
+<td>9.23e-18</td>
+<td>1.36e-17</td>
 </tr>
 </tbody>
 </table>
@@ -454,7 +425,7 @@ window.Quarto = {
 </div>
 </div>
 <p>Now we can plot q</p>
-<div id="5b91943d" class="cell" data-execution_count="9">
+<div id="9db66bf9" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="bu">len</span>(q), <span class="dv">1</span>) <span class="op">+</span> <span class="dv">1</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>plt.errorbar(X, q, yerr<span class="op">=</span>q_err, fmt<span class="op">=</span><span class="st">'o'</span>)</span>
@@ -471,7 +442,7 @@ window.Quarto = {
 </div>
 </div>
 <p>For some reason, we had a really large uncertainty on the 2nd drop, which means that it is hard to see the quantization of charge in this plot. However, if we ignore that point can see the quantization more clearly. Note we only ignore this point for visualization, not for any calculations.</p>
-<div id="8b4393b6" class="cell" data-execution_count="10">
+<div id="4516f5a6" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot both for easier comparison and to make the lab report look nicer</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">5</span>))</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>)</span>
@@ -499,7 +470,7 @@ window.Quarto = {
 </div>
 <p>from this it is easier to see a noticable pattern in the charges, which suggests that charge is quantized, despite the large uncertainties in some of the measurements. It seems that the more charged our oil drops are the larger the uncertainty in our measurements. This suggests that our error is systematic, likely due to some unaccounted for factor in our experiment, such as collisions with air molecules.</p>
 <p>Let us divide by the smallest charge to see if we can find integer multiples</p>
-<div id="81a15177" class="cell" data-execution_count="11">
+<div id="f70cde24" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>min_charge <span class="op">=</span> np.<span class="bu">min</span>(q)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>min_charge_err <span class="op">=</span> q_err[np.argmin(q)]</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>ratios <span class="op">=</span> q <span class="op">/</span> min_charge</span>
@@ -507,9 +478,9 @@ window.Quarto = {
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"min_charge: </span><span class="sc">{</span>min_charge<span class="sc">:.4e}</span><span class="ss"> ± </span><span class="sc">{</span>min_charge_err<span class="sc">:.4e}</span><span class="ss">"</span>)</span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>pd.DataFrame({ <span class="st">"ratios"</span>: ratios, <span class="st">"err"</span>: ratios_err}) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>min_charge: 5.5501e-24 ± 7.9995e-24</code></pre>
+<pre><code>min_charge: 1.3559e-19 ± 1.9544e-19</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="11">
+<div class="cell-output cell-output-display" data-execution_count="59">
 <div>
 
 
@@ -524,128 +495,128 @@ window.Quarto = {
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
-<td>25.9869</td>
-<td>52.1015</td>
+<td>7.95e+00</td>
+<td>1.59e+01</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
-<td>849360.0701</td>
-<td>1764626.4440</td>
+<td>5.49e+03</td>
+<td>1.14e+04</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
-<td>358.5164</td>
-<td>734.0145</td>
+<td>4.05e+01</td>
+<td>8.29e+01</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
-<td>396.6770</td>
-<td>816.8321</td>
+<td>4.29e+01</td>
+<td>8.83e+01</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">4</td>
-<td>187.3045</td>
-<td>388.3179</td>
+<td>2.65e+01</td>
+<td>5.50e+01</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">5</td>
-<td>687.0768</td>
-<td>1404.1769</td>
+<td>6.12e+01</td>
+<td>1.25e+02</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">6</td>
-<td>1352.8956</td>
-<td>2791.1610</td>
+<td>9.28e+01</td>
+<td>1.91e+02</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">7</td>
-<td>92.5890</td>
-<td>190.7172</td>
+<td>1.72e+01</td>
+<td>3.53e+01</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">8</td>
-<td>80.6382</td>
-<td>166.0034</td>
+<td>1.57e+01</td>
+<td>3.24e+01</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">9</td>
-<td>20.6987</td>
-<td>41.4934</td>
+<td>6.89e+00</td>
+<td>1.38e+01</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">10</td>
-<td>6.0848</td>
-<td>12.4436</td>
+<td>3.11e+00</td>
+<td>6.36e+00</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">11</td>
-<td>12.7678</td>
-<td>26.2591</td>
+<td>4.93e+00</td>
+<td>1.01e+01</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">12</td>
-<td>1.9848</td>
-<td>4.0503</td>
+<td>1.54e+00</td>
+<td>3.14e+00</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">13</td>
-<td>12.3781</td>
-<td>25.4478</td>
+<td>4.84e+00</td>
+<td>9.95e+00</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">14</td>
-<td>1.0000</td>
-<td>2.0383</td>
+<td>1.00e+00</td>
+<td>2.04e+00</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">15</td>
-<td>1813.4288</td>
-<td>3765.7410</td>
+<td>1.12e+02</td>
+<td>2.33e+02</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">16</td>
-<td>260.5353</td>
-<td>539.2404</td>
+<td>3.31e+01</td>
+<td>6.86e+01</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">17</td>
-<td>573.0393</td>
-<td>1187.5206</td>
+<td>5.44e+01</td>
+<td>1.13e+02</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">18</td>
-<td>1537.1146</td>
-<td>3189.6886</td>
+<td>1.01e+02</td>
+<td>2.10e+02</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">19</td>
-<td>16.4364</td>
-<td>33.2133</td>
+<td>5.97e+00</td>
+<td>1.21e+01</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">20</td>
-<td>345.5885</td>
-<td>712.5265</td>
+<td>3.98e+01</td>
+<td>8.20e+01</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">21</td>
-<td>1793.8440</td>
-<td>3725.9547</td>
+<td>1.11e+02</td>
+<td>2.31e+02</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">22</td>
-<td>866.1322</td>
-<td>1796.6662</td>
+<td>7.05e+01</td>
+<td>1.46e+02</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">23</td>
-<td>1167.4052</td>
-<td>2420.4848</td>
+<td>8.51e+01</td>
+<td>1.76e+02</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">24</td>
-<td>814.0053</td>
-<td>1680.4823</td>
+<td>6.81e+01</td>
+<td>1.41e+02</td>
 </tr>
 </tbody>
 </table>
@@ -653,9 +624,8 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>We do not have very good data, so it is hard to see integer multiples in these ratios, no matter if we divide by an integer or not. Our minimum charge is seen above and definetly does not agree with our expected value of the elementary charge of approximately <span class="math inline">\(1.6 \times 10^{-19} \text{ C}\)</span>. This is likely due to more systematic error in our measurements, most likely imprecise timing this time, as well as not having enough data to average out random errors.</p>
-<p>Now we can try to estimate the elementary charge by dividing our charges by our ratios, rounded to the nearest integer, then we can look at the weigheted average of these estimates to get a better estimate of the elementary charge.</p>
-<div id="b01555be" class="cell" data-execution_count="12">
+<p>We do not have very good data, so it is hard to see integer multiples in these ratios. If we divide by an integer we end up getting a worse fit for our estimated elementary charge, so we dont do that. Actually agrees well with the expected value of the elementary charge. Now we can try to estimate the elementary charge by dividing our charges by our ratios, rounded to the nearest integer, then we can look at the weigheted average of these estimates to get a better estimate of the elementary charge.</p>
+<div id="7981e05f" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>int_ratios <span class="op">=</span> np.<span class="bu">round</span>(ratios)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>e_estimates <span class="op">=</span> q <span class="op">/</span> int_ratios</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>e_estimates_err <span class="op">=</span> e_estimates <span class="op">*</span> np.sqrt((q_err<span class="op">/</span>q)<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> (ratios_err<span class="op">/</span>ratios)<span class="op">**</span><span class="dv">2</span>)</span>
@@ -664,10 +634,10 @@ window.Quarto = {
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>e_weighted_err <span class="op">=</span> np.sqrt(<span class="dv">1</span> <span class="op">/</span> np.<span class="bu">sum</span>(weights))</span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Estimated elementary charge: </span><span class="sc">{</span>e_weighted_avg<span class="sc">:.4e}</span><span class="ss"> ± </span><span class="sc">{</span>e_weighted_err<span class="sc">:.4e}</span><span class="ss"> C"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Estimated elementary charge: 5.5537e-24 ± 2.8038e-24 C</code></pre>
+<pre><code>Estimated elementary charge: 1.3317e-19 ± 6.7343e-20 C</code></pre>
 </div>
 </div>
-<p>Sadly this doesn’t yield much hope for us to get a good estimate of the elementary charge, as our value is still far from the expected value. Hopefully in the future we can improve our experimental methods to reduce systematic error and get better results.</p>
+<p>This actually agrees quite well with the accepted value of the elementary charge, which is approximately 1.602e-19 C. Overall, despite some large uncertainties in our measurements, we were able to observe the quantization of charge and estimate the elementary charge with reasonable accuracy.</p>
 </section>
 
 </main>
