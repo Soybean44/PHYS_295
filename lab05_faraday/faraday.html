@@ -70,6 +70,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="faraday_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="faraday_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -99,7 +128,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>Import libraries</p>
-<div id="15b5bae9" class="cell" data-execution_count="1">
+<div id="aac8bcda" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -109,21 +138,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Day 1: Direct Current</h1>
 <section id="polarization-calibration" class="level2">
 <h2 class="anchored" data-anchor-id="polarization-calibration">Polarization Calibration</h2>
-<p>Import our data</p>
-<div id="40173ac0" class="cell" data-execution_count="2">
+<p>Import our data and calculate error</p>
+<div id="1e1e414f" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>no_rod <span class="op">=</span> pd.read_csv(<span class="st">"data/day1/no_rod.csv"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>with_rod <span class="op">=</span> pd.read_csv(<span class="st">"data/day1/with_rod.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>no_rod[<span class="st">"error"</span>] <span class="op">=</span> no_rod[<span class="st">"change"</span>]<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>with_rod <span class="op">=</span> pd.read_csv(<span class="st">"data/day1/with_rod.csv"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>with_rod[<span class="st">"error"</span>] <span class="op">=</span> with_rod[<span class="st">"change"</span>]<span class="op">/</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Plot it around 0 (Wrapping between -180 and 180)</p>
-<div id="0ef30d53" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> [x <span class="cf">if</span> x <span class="op">&lt;</span> <span class="dv">180</span> <span class="cf">else</span> x<span class="op">-</span><span class="dv">360</span> <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">list</span>(no_rod[<span class="st">"angle"</span>])]</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="bu">list</span>(no_rod[<span class="st">"voltage"</span>])</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>x_rod <span class="op">=</span> [x <span class="cf">if</span> x <span class="op">&lt;</span> <span class="dv">180</span> <span class="cf">else</span> x<span class="op">-</span><span class="dv">360</span> <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">list</span>(with_rod[<span class="st">"angle"</span>])]</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>y_rod <span class="op">=</span> <span class="bu">list</span>(with_rod[<span class="st">"voltage"</span>])</span>
+<div id="c45ce7a2" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>angle_no_rod <span class="op">=</span> [x <span class="cf">if</span> x <span class="op">&lt;</span> <span class="dv">180</span> <span class="cf">else</span> x<span class="op">-</span><span class="dv">360</span> <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">list</span>(no_rod[<span class="st">"angle"</span>])]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>voltage_no_rod <span class="op">=</span> <span class="bu">list</span>(no_rod[<span class="st">"voltage"</span>])</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>angle_rod <span class="op">=</span> [x <span class="cf">if</span> x <span class="op">&lt;</span> <span class="dv">180</span> <span class="cf">else</span> x<span class="op">-</span><span class="dv">360</span> <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">list</span>(with_rod[<span class="st">"angle"</span>])]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>voltage_rod <span class="op">=</span> <span class="bu">list</span>(with_rod[<span class="st">"voltage"</span>])</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>plt.scatter(x,y)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>plt.scatter(x_rod,y_rod)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>plt.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Polarization Calibration"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Angle (degrees)"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Voltage (mV)"</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>plt.errorbar(angle_no_rod, voltage_no_rod, yerr<span class="op">=</span>no_rod[<span class="st">"error"</span>], fmt<span class="op">=</span><span class="st">'o'</span>, label<span class="op">=</span><span class="st">"No Rod"</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>plt.errorbar(angle_rod, voltage_rod, yerr<span class="op">=</span>with_rod[<span class="st">"error"</span>], fmt<span class="op">=</span><span class="st">'o'</span>, label<span class="op">=</span><span class="st">"With Rod"</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>plt.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -132,51 +167,220 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>fit the data over a cosine curve</p>
-<div id="973cf636" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> cosine(x, a, b, c):</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> a<span class="op">*</span>np.cos(b<span class="op">*</span>x <span class="op">-</span> c)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>curve_fit(cosine,no_rod[<span class="st">"angle"</span>], no_rod[<span class="st">"voltage"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>(array([87.13968909,  0.9775951 , -0.21783221]),
- array([[ 2.82582115e+03, -3.11764505e-02, -7.05332227e+00],
-        [-3.11764505e-02,  3.29996930e-05,  4.95822609e-03],
-        [-7.05332227e+00,  4.95822609e-03,  1.16400302e+00]]))</code></pre>
-</div>
-</div>
+<p>Note that error is 2 orders of magnitude smaller than the scale of the data, so it is not noticable</p>
 </section>
 <section id="dc-verlet" class="level2">
 <h2 class="anchored" data-anchor-id="dc-verlet">DC Verlet</h2>
-<p>Import the data</p>
-<div id="87708374" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>verlet1 <span class="op">=</span> pd.read_csv(<span class="st">"data/day1/dc_verdet_1.csv"</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>verlet2 <span class="op">=</span> pd.read_csv(<span class="st">"data/day1/dc_verdet_2.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Import the data and convert to radians</p>
+<div id="718e1751" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>verlet1 <span class="op">=</span> pd.read_csv(<span class="st">"data/day1/dc_verdet_1.csv"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>verlet2 <span class="op">=</span> pd.read_csv(<span class="st">"data/day1/dc_verdet_2.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Plot the angle change vs intensity (read as current)</p>
-<div id="1f5d9b50" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>plt.scatter(verlet1[<span class="st">"current"</span>],verlet1[<span class="st">"angle change"</span>])</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>plt.scatter(verlet2[<span class="st">"current"</span>],verlet2[<span class="st">"angle change"</span>])</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d9490f52" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"DC Verdet Constant Measurement"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Current (A)"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Angle Change (degrees)"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>plt.scatter(verlet1[<span class="st">"current"</span>],verlet1[<span class="st">"angle change"</span>], label<span class="op">=</span><span class="st">"Minimum Intensity"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>plt.scatter(verlet2[<span class="st">"current"</span>],verlet2[<span class="st">"angle change"</span>], label<span class="op">=</span><span class="st">"Half Intensity"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="faraday_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="faraday_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Here we are accurate to the about 2 degrees of precision, which is not a whole lot. This will be improved in the AC section.</p>
+<p>We can set up some constants to then fit this and find the verlet constant</p>
+<div id="3afd8fcf" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>L <span class="op">=</span> <span class="fl">10e-2</span> <span class="co"># length in meters</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>k <span class="op">=</span> <span class="fl">11.1e-3</span> <span class="co"># Calibration constant in T/A</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># convert angle to radians</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>verlet1[<span class="st">"angle change"</span>] <span class="op">=</span> np.radians(verlet1[<span class="st">"angle change"</span>])</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>verlet2[<span class="st">"angle change"</span>] <span class="op">=</span> np.radians(verlet2[<span class="st">"angle change"</span>])</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> dc_verlet_fit(df):</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    popt, pcov <span class="op">=</span> np.polyfit(df[<span class="st">"current"</span>], df[<span class="st">"angle change"</span>], <span class="dv">1</span>, cov<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    slope, intercept <span class="op">=</span> popt</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    slope_err, intercept_err <span class="op">=</span> np.sqrt(np.diag(pcov))</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    slope_mod <span class="op">=</span> slope <span class="op">/</span> (L <span class="op">*</span> k)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    slope_mod_err <span class="op">=</span> slope_err <span class="op">/</span> (L <span class="op">*</span> k)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (slope_mod, slope_mod_err), (intercept, intercept_err)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>dc_slope1, dc_intercept1 <span class="op">=</span> dc_verlet_fit(verlet1)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>dc_slope2, dc_intercept2 <span class="op">=</span> dc_verlet_fit(verlet2)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Verlet1:"</span>)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Slope/(L*k): </span><span class="sc">{</span>dc_slope1[<span class="dv">0</span>]<span class="sc">:.4f}</span><span class="ss"> ± </span><span class="sc">{</span>dc_slope1[<span class="dv">1</span>]<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Intercept: </span><span class="sc">{</span>dc_intercept1[<span class="dv">0</span>]<span class="sc">:.4f}</span><span class="ss"> ± </span><span class="sc">{</span>dc_intercept1[<span class="dv">1</span>]<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Verlet2:"</span>)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Slope/(L*k): </span><span class="sc">{</span>dc_slope2[<span class="dv">0</span>]<span class="sc">:.4f}</span><span class="ss"> ± </span><span class="sc">{</span>dc_slope2[<span class="dv">1</span>]<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Intercept: </span><span class="sc">{</span>dc_intercept2[<span class="dv">0</span>]<span class="sc">:.4f}</span><span class="ss"> ± </span><span class="sc">{</span>dc_intercept2[<span class="dv">1</span>]<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Verlet1:
+  Slope/(L*k): 25.7736 ± 9.7505
+  Intercept: -0.0378 ± 0.0301
+Verlet2:
+  Slope/(L*k): 14.6987 ± 2.3216
+  Intercept: 0.0103 ± 0.0058</code></pre>
+</div>
+</div>
+<p>Overall not good, but we will improve on that value</p>
 </section>
 </section>
 <section id="day-2-alternating-current" class="level1">
 <h1>Day 2: Alternating Current</h1>
 <section id="polarization-calibration-1" class="level2">
 <h2 class="anchored" data-anchor-id="polarization-calibration-1">Polarization Calibration</h2>
-<p>We repeat the polarization calibration on a smaller scale. Given last day’s data, we can safely assume that the rod does not affect polarization just the intensity, so we only need to take data without the rod.</p>
-<div id="f8192e6d" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>no_rod_ac <span class="op">=</span> pd.read_csv(<span class="st">"data/day2/polarization.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We repeat the polarization calibration on a smaller scale. Given last day’s data, we can safely assume that the rod does not affect polarization just the intensity, so we only inserted the rod and took data once.</p>
+<div id="13b54db1" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>polarization <span class="op">=</span> pd.read_csv(<span class="st">"data/day2/polarization.csv"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>polarization[<span class="st">"error"</span>] <span class="op">=</span> polarization[<span class="st">"change"</span>]<span class="op">/</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Plot it around 0 (Wrapping between -180 and 180)</p>
+<div id="c00b4c54" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>angle_day2 <span class="op">=</span> [x <span class="cf">if</span> x <span class="op">&lt;</span> <span class="dv">180</span> <span class="cf">else</span> x<span class="op">-</span><span class="dv">360</span> <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">list</span>(polarization[<span class="st">"angle"</span>])]</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>voltage_day2 <span class="op">=</span> <span class="bu">list</span>(polarization[<span class="st">"voltage"</span>])</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Polarization Calibration"</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Angle (degrees)"</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Voltage (mV)"</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>plt.errorbar(angle_no_rod, voltage_no_rod, yerr<span class="op">=</span>no_rod[<span class="st">"error"</span>], fmt<span class="op">=</span><span class="st">'o'</span>, label<span class="op">=</span><span class="st">"No Rod"</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>plt.errorbar(angle_rod, voltage_rod, yerr<span class="op">=</span>with_rod[<span class="st">"error"</span>], fmt<span class="op">=</span><span class="st">'o'</span>, label<span class="op">=</span><span class="st">"With Rod"</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>plt.errorbar(angle_day2, voltage_day2, yerr<span class="op">=</span>polarization[<span class="st">"error"</span>], fmt<span class="op">=</span><span class="st">'o'</span>, label<span class="op">=</span><span class="st">"with Rod Day 2"</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>plt.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="faraday_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Here we see a smaller intensity, but that doesn’t matter as we mainly care about the sinusoidal shape here.</p>
+<p>we can linearize the curve as follows, plotting <span class="math inline">\(V\)</span> vs <span class="math inline">\(\cos^2(\theta - \theta_0)\)</span>, as seen from Malus’ Law, just using our empty solonoid</p>
+<div id="6aca707d" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>theta_0 <span class="op">=</span> angle_no_rod[np.argmax(voltage_no_rod)]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>V_0 <span class="op">=</span> np.<span class="bu">max</span>(voltage_no_rod)<span class="op">*</span><span class="fl">1e-3</span> <span class="co"># will use this later (converted to volts)</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>linearized_angle <span class="op">=</span> [np.cos(np.radians(x <span class="op">-</span> theta_0))<span class="op">**</span><span class="dv">2</span> <span class="cf">for</span> x <span class="kw">in</span> angle_no_rod]</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Linearized Polarization"</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Linearized Angle ($</span><span class="ch">\\</span><span class="st">cos^2(</span><span class="ch">\\</span><span class="st">theta - </span><span class="ch">\\</span><span class="st">theta_0)$)"</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Voltage (mV)"</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>plt.errorbar(linearized_angle, voltage_no_rod, yerr<span class="op">=</span>no_rod[<span class="st">"error"</span>], fmt<span class="op">=</span><span class="st">'o'</span>, label<span class="op">=</span><span class="st">"No Rod Linearized"</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>plt.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="faraday_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="ac-verdet" class="level2">
+<h2 class="anchored" data-anchor-id="ac-verdet">AC Verdet</h2>
+<p>Import the data</p>
+<div id="760451e9" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ac_verdet <span class="op">=</span> pd.read_csv(<span class="st">"data/day2/ac_verdet.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here the experiment is in reverse, we know measure the voltage at a fixed angle, and vary the current. This means we need to find the angle corresponding to the measured voltage. The equation is defined as follows:</p>
+<p><span class="math display">\[
+\Delta V = \Delta \theta \frac{dV}{d\theta}
+\]</span></p>
+<p>Where <span class="math inline">\(\frac{dV}{d\theta}\)</span> is the derivative of the voltage found through Malus’ Law. As explained in the lab manual this ends up just being <span class="math inline">\(V_0\)</span>, so we dont need to calculate anything new. This also requires that <span class="math inline">\(\Delta V\)</span> is in RMS instead of peak to peak, so we convert it. Afterwards we average the values and get the standard deviation as the error.</p>
+<div id="25dc43a8" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert Delta V to RMS and Volts instead of mV</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>V <span class="op">=</span> ac_verdet[<span class="st">"Delta V"</span>].mean()<span class="op">*</span><span class="fl">1e-3</span><span class="op">/</span>(np.sqrt(<span class="dv">2</span>))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>V_std <span class="op">=</span> ac_verdet[<span class="st">"Delta V"</span>].std()<span class="op">*</span><span class="fl">1e-3</span><span class="op">/</span>(np.sqrt(<span class="dv">2</span>))</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert Current to Amps</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>I  <span class="op">=</span> ac_verdet[<span class="st">"Current"</span>].mean()<span class="op">*</span><span class="fl">1e-3</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>I_std <span class="op">=</span> ac_verdet[<span class="st">"Current"</span>].std()<span class="op">*</span><span class="fl">1e-3</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"AC Verdet Data:"</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Delta V (Pk-Pk): </span><span class="sc">{</span>ac_verdet[<span class="st">"Delta V"</span>]<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss"> ± </span><span class="sc">{</span>ac_verdet[<span class="st">"Delta V"</span>]<span class="sc">.</span>std()<span class="sc">:.4f}</span><span class="ss"> mV"</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Delta V (RMS): </span><span class="sc">{</span>V<span class="sc">:.4f}</span><span class="ss"> ± </span><span class="sc">{</span>V_std<span class="sc">:.4f}</span><span class="ss"> mV"</span>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Current: </span><span class="sc">{</span>I<span class="sc">:.4f}</span><span class="ss"> ± </span><span class="sc">{</span>I_std<span class="sc">:.4f}</span><span class="ss"> mA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>AC Verdet Data:
+  Delta V (Pk-Pk): 2.3616 ± 0.1061 mV
+  Delta V (RMS): 0.0017 ± 0.0001 mV
+  Current: 0.2602 ± 0.0021 mA</code></pre>
+</div>
+</div>
+<p>Note that our voltage here was measured as a Pk-Pk value, however we are treating it as the change in amplitude at peaks, therefore we only need to convert to RMS by dividing by <span class="math inline">\(\sqrt{2}\)</span>.</p>
+<p>We did not have time to get data for every test, so we took our initial 25 points of noisy data, and quantitatively looked at the other methods to see where improvements could be made in the future.</p>
+<p>Now we can go and calculate the Verdet constant from this data point, recalling that <span class="math inline">\(\Delta \theta\)</span> is the same as the DC case. solving for <span class="math inline">\(\Delta \theta\)</span> and dividing by <span class="math inline">\(Lk\)</span> gives us the Verdet constant.</p>
+<div id="13ea8e2f" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>dTheta <span class="op">=</span> V <span class="op">/</span> V_0</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Delta Theta: </span><span class="sc">{</span>dTheta<span class="sc">:.4f}</span><span class="ss"> radians"</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>C <span class="op">=</span> dTheta<span class="op">/</span>(k<span class="op">*</span>I<span class="op">*</span>L)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>C_err <span class="op">=</span> C <span class="op">*</span> np.sqrt( (V_std<span class="op">/</span>V)<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> (I_std<span class="op">/</span>I)<span class="op">**</span><span class="dv">2</span> )</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"AC Verdet Constant: </span><span class="sc">{</span>C<span class="sc">:.4f}</span><span class="ss"> ± </span><span class="sc">{</span>C_err<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Delta Theta: 0.0054 radians
+AC Verdet Constant: 18.8349 ± 0.8595</code></pre>
+</div>
+</div>
+<p>We can compare our uncertainty to the noise in our original data as</p>
+<div id="52cb8b63" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>original_noise <span class="op">=</span> (ac_verdet[<span class="st">"Noise Top"</span>]<span class="op">/</span><span class="dv">2</span><span class="op">+</span>ac_verdet[<span class="st">"Noise Bottom"</span>]<span class="op">/</span><span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This time it is actually pk-pk noise, so divide by 2 to get amplitude</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>noise_mean <span class="op">=</span> original_noise.mean()<span class="op">*</span><span class="fl">1e-3</span><span class="op">/</span>(<span class="dv">2</span><span class="op">*</span>np.sqrt(<span class="dv">2</span>)) </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>noise_std <span class="op">=</span> original_noise.std()<span class="op">*</span><span class="fl">1e-3</span><span class="op">/</span>(<span class="dv">2</span><span class="op">*</span>np.sqrt(<span class="dv">2</span>))</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Original Noise (RMS): </span><span class="sc">{</span>noise_mean<span class="sc">:.4f}</span><span class="ss"> ± </span><span class="sc">{</span>noise_std<span class="sc">:.4f}</span><span class="ss"> mV"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Original Noise (RMS): 0.0002 ± 0.0000 mV</code></pre>
+</div>
+</div>
+<p>Sadly we did not have enough measurements to beat out noise</p>
+</section>
+<section id="gain" class="level2">
+<h2 class="anchored" data-anchor-id="gain">Gain</h2>
+<p>For this section we only have one data point, so we cannot calculate an error, but we can still calculate a value for the Verdet constant, to compare to our other methods.</p>
+<div id="f3cf0259" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>V_raw <span class="op">=</span> <span class="fl">23.6</span><span class="op">*</span><span class="fl">1e-3</span><span class="op">/</span>(np.sqrt(<span class="dv">2</span>)) </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>V <span class="op">=</span> V_raw<span class="op">/</span><span class="dv">10</span> <span class="co"># divide by gain of 10</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>I <span class="op">=</span> <span class="fl">258.3</span><span class="op">*</span><span class="fl">1e-3</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>gain_verdet <span class="op">=</span> (V <span class="op">/</span> V_0)<span class="op">/</span>(k<span class="op">*</span>I<span class="op">*</span>L)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Gain Verdet Constant: </span><span class="sc">{</span>gain_verdet<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Gain Verdet Constant: 18.9588</code></pre>
+</div>
+</div>
+<p>We get a fairly similar value here, showing that the gain does not affect the measurement, just the signal to noise ratio, our measurements for the noise tended to be fairly similar to the non gained measurements.</p>
+</section>
+<section id="filter" class="level2">
+<h2 class="anchored" data-anchor-id="filter">Filter</h2>
+<p>Now we use a filter to improve our signal to noise ratio. With one measurement at each Q factor, we cannot calculate a standard deviation, so we cannot calculate an error, however it allows us to get a rough idea of how well this method works.</p>
+<div id="c1fb79fa" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>filtered <span class="op">=</span> pd.read_csv(<span class="st">"data/day2/filter.csv"</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>V <span class="op">=</span> filtered[<span class="st">"Delta V"</span>]<span class="op">*</span><span class="fl">1e-3</span><span class="op">/</span>(np.sqrt(<span class="dv">2</span>))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>I <span class="op">=</span> filtered[<span class="st">"Current"</span>]<span class="op">*</span><span class="fl">1e-3</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>filter_verdet <span class="op">=</span> (V <span class="op">/</span> V_0)<span class="op">/</span>(k<span class="op">*</span>I<span class="op">*</span>L) <span class="op">/</span> (<span class="dv">10</span>) <span class="co"># divide by Q factor and gain</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we can display the results as a bar chart</p>
+<div id="d95e94ff" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Filtered Verdet Constant Measurements"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Q Factor"</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Verdet Constant (rad/T·m)"</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>plt.bar(<span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">str</span>,filtered[<span class="st">"Q"</span>])), filter_verdet)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="faraday_files/figure-html/cell-17-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>There is a chance that there was some parasitic coupling in the filter that caused some issues, as the values do not seem to improve with higher Q factor as expected. Further testing would be required to confirm this. My assumption was the Q factor also amplified the signal, however it seems that it only improves the signal to noise ratio, which means there is a lot of systematic error here that we are not accounting for.</p>
 </section>
 </section>
 
