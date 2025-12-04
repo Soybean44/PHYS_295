@@ -20,18 +20,18 @@ Import our data and calculate error
 
 ```{python}
 no_rod = pd.read_csv("data/day1/no_rod.csv")
-no_rod["error"] = no_rod["change"]/2
+no_rod["error"] = no_rod["Change"]/2
 with_rod = pd.read_csv("data/day1/with_rod.csv")
-with_rod["error"] = with_rod["change"]/2
+with_rod["error"] = with_rod["Change"]/2
 ```
 
 Plot it around 0 (Wrapping between -180 and 180)
 
 ```{python}
-angle_no_rod = [x if x < 180 else x-360 for x in list(no_rod["angle"])]
-voltage_no_rod = list(no_rod["voltage"])
-angle_rod = [x if x < 180 else x-360 for x in list(with_rod["angle"])]
-voltage_rod = list(with_rod["voltage"])
+angle_no_rod = [x if x < 180 else x-360 for x in list(no_rod["Angle"])]
+voltage_no_rod = list(no_rod["Voltage"])
+angle_rod = [x if x < 180 else x-360 for x in list(with_rod["Angle"])]
+voltage_rod = list(with_rod["Voltage"])
 plt.figure()
 plt.title("Polarization Calibration")
 plt.xlabel("Angle (degrees)")
@@ -94,6 +94,15 @@ print(f"  Slope/(L*k): {dc_slope2[0]:.4f} ± {dc_slope2[1]:.4f}")
 print(f"  Intercept: {dc_intercept2[0]:.4f} ± {dc_intercept2[1]:.4f}")
 ```
 
+The weighted average of these two values gives us our final DC Verdet constant
+
+```{python}
+C_dc_err = np.sqrt(1/(1/dc_slope1[1]**2 + 1/dc_slope2[1]**2))
+C_dc = (dc_slope1[0]/dc_slope1[1]**2 + dc_slope2[0]/dc_slope2[1]**2) * C_dc_err**2
+print(f"DC Verdet Constant: {C_dc:.4f} ± {C_dc_err:.4f} rad/T·m")
+```
+
+
 Overall not good, but we will improve on that value
 
 # Day 2: Alternating Current
@@ -104,15 +113,15 @@ We repeat the polarization calibration on a smaller scale. Given last day's data
 
 ```{python}
 polarization = pd.read_csv("data/day2/polarization.csv")
-polarization["error"] = polarization["change"]/2
+polarization["error"] = polarization["Change"]/2
 ```
 
 
 Plot it around 0 (Wrapping between -180 and 180)
 
 ```{python}
-angle_day2 = [x if x < 180 else x-360 for x in list(polarization["angle"])]
-voltage_day2 = list(polarization["voltage"])
+angle_day2 = [x if x < 180 else x-360 for x in list(polarization["Angle"])]
+voltage_day2 = list(polarization["Voltage"])
 plt.figure()
 plt.title("Polarization Calibration")
 plt.xlabel("Angle (degrees)")
@@ -130,7 +139,9 @@ we can linearize the curve as follows, plotting $V$ vs $\cos^2(\theta - \theta_0
 
 ```{python}
 theta_0 = angle_no_rod[np.argmax(voltage_no_rod)]
+print(f"Theta 0: {theta_0} degrees")
 V_0 = np.max(voltage_no_rod)*1e-3 # will use this later (converted to volts)
+print(f"V_0: {V_0} V") 
 linearized_angle = [np.cos(np.radians(x - theta_0))**2 for x in angle_no_rod]
 plt.figure()
 plt.title("Linearized Polarization")
@@ -166,7 +177,7 @@ I_std = ac_verdet["Current"].std()*1e-3
 print("AC Verdet Data:")
 print(f"  Delta V (Pk-Pk): {ac_verdet["Delta V"].mean():.4f} ± {ac_verdet["Delta V"].std():.4f} mV")
 print(f"  Delta V (RMS): {V:.4f} ± {V_std:.4f} mV")
-print(f"  Current: {I:.4f} ± {I_std:.4f} mA")
+print(f"  Current: {I:.4f} ± {I_std:.4f} A")
 ```
 
 Note that our voltage here was measured as a Pk-Pk value, however we are treating it as the change in amplitude at peaks, therefore we only need to convert to RMS by dividing by $\sqrt{2}$.
@@ -178,9 +189,9 @@ Now we can go and calculate the Verdet constant from this data point, recalling 
 ```{python}
 dTheta = V / V_0
 print(f"Delta Theta: {dTheta:.4f} radians")
-C = dTheta/(k*I*L)
-C_err = C * np.sqrt( (V_std/V)**2 + (I_std/I)**2 )
-print(f"AC Verdet Constant: {C:.4f} ± {C_err:.4f}")
+C_ac = dTheta/(k*I*L)
+C_ac_err = C_ac * np.sqrt( (V_std/V)**2 + (I_std/I)**2 )
+print(f"AC Verdet Constant: {C_ac:.4f} ± {C_ac_err:.4f}")
 ```
 
 We can compare our uncertainty to the noise in our original data as
@@ -188,12 +199,12 @@ We can compare our uncertainty to the noise in our original data as
 ```{python}
 original_noise = (ac_verdet["Noise Top"]/2+ac_verdet["Noise Bottom"]/2)/2
 # This time it is actually pk-pk noise, so divide by 2 to get amplitude
-noise_mean = original_noise.mean()*1e-3/(2*np.sqrt(2)) 
-noise_std = original_noise.std()*1e-3/(2*np.sqrt(2))
+noise_mean = original_noise.mean()/(2*np.sqrt(2)) 
+noise_std = original_noise.std()/(2*np.sqrt(2))
 print(f"Original Noise (RMS): {noise_mean:.4f} ± {noise_std:.4f} mV")
 ```
 
-Sadly we did not have enough measurements to beat out noise 
+It seems like our standard deviation is just about half our noise, meaning we actually are more accurate than our noise level, which is good.
 
 ## Gain
 

@@ -40,8 +40,9 @@ if abstract != none {
 pagebreak()
 
 
-show heading: it => pad(bottom: 0.8em, it)
+// show heading: it => pad(bottom: 0.5em, text(it, 14pt, weight: "bold"))
 set heading(numbering: "1.")
+show heading: set text(14pt, weight: "bold")
 set par(
   first-line-indent: 1em,
   spacing: 1.5em,
